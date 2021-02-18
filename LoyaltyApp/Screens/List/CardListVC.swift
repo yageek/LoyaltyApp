@@ -9,7 +9,7 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
-class CardListVC: UICollectionViewController {
+final class CardListVC: UICollectionViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

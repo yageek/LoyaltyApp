@@ -33,7 +33,7 @@
                                 <imageReference key="image" image="giftcard" catalog="system" symbolScale="large"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="lGC-RE-pgy">
-                                <rect key="frame" x="41.5" y="344" width="331" height="144"/>
+                                <rect key="frame" x="41.5" y="344" width="331" height="187"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ndz-er-MgG">
                                         <rect key="frame" x="0.0" y="0.0" width="331" height="34"/>
@@ -52,6 +52,9 @@
                                             <segue destination="f3q-qk-0H3" kind="show" id="j0K-e7-kE8"/>
                                         </connections>
                                     </button>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="heS-2V-Pfd">
+                                        <rect key="frame" x="0.0" y="167" width="331" height="20"/>
+                                    </activityIndicatorView>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -69,6 +72,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="9QD-LZ-59d"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="heS-2V-Pfd" id="ZXg-bH-Y7W"/>
+                        <outlet property="emailTextField" destination="ndz-er-MgG" id="30w-9i-CWY"/>
+                        <outlet property="passwordTextField" destination="Wvf-3K-yTW" id="PMT-Hm-ZdI"/>
+                        <outlet property="signInButton" destination="2G5-fB-zPN" id="o99-ju-A7Z"/>
                         <segue destination="ZcY-7x-Wai" kind="presentation" identifier="showSignUp" id="Qij-hv-ex2"/>
                     </connections>
                 </viewController>
@@ -99,7 +106,7 @@
                                 <imageReference key="image" image="pencil" catalog="system" symbolScale="large"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="5mw-oW-chi">
-                                <rect key="frame" x="41.5" y="256" width="331" height="201"/>
+                                <rect key="frame" x="41.5" y="256" width="331" height="244"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="iqZ-mr-Cqb">
                                         <rect key="frame" x="0.0" y="0.0" width="331" height="34"/>
@@ -118,8 +125,11 @@
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ofi-Va-0nV">
                                         <rect key="frame" x="0.0" y="171" width="331" height="30"/>
-                                        <state key="normal" title="Sign in"/>
+                                        <state key="normal" title="Sign up"/>
                                     </button>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="hM9-6j-5Nn">
+                                        <rect key="frame" x="0.0" y="224" width="331" height="20"/>
+                                    </activityIndicatorView>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -137,6 +147,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="DiA-8g-oNN"/>
                     <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="hM9-6j-5Nn" id="9bP-cw-l9A"/>
+                        <outlet property="emailTextField" destination="iOb-1S-TlM" id="59S-W2-dZS"/>
+                        <outlet property="nameTextField" destination="iqZ-mr-Cqb" id="3dW-OR-McC"/>
+                        <outlet property="passwordTextField" destination="QNI-mp-Vbj" id="3jf-Qm-JcC"/>
+                        <outlet property="signUpButton" destination="Ofi-Va-0nV" id="kgr-R4-Xj0"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mBv-3g-ZIh" sceneMemberID="firstResponder"/>
             </objects>
