@@ -8,6 +8,11 @@
 import Foundation
 final class RequestOperation<E: Endpoint, Body: Encodable, ResponseBody: Decodable>: BaseOperation {
 
+    struct HTTPError: Error {
+        let statusCode: Int
+        let response: HTTPURLResponse
+    }
+
     // MARK: - Var
     typealias Completion = (Result<ResponseBody?, Error>) -> Void
     private let session: URLSession
@@ -56,7 +61,23 @@ final class RequestOperation<E: Endpoint, Body: Encodable, ResponseBody: Decodab
             self.finish(withError: error)
         } else if let response = response {
 
-            
+            if response.statusCode >= 200 && response.statusCode < 300 {
+
+                if let data = data {
+
+                    do {
+                        let element: ResponseBody = try JSONDecoder().decode(ResponseBody.self, from: data)
+                        self.finish(withSuccess: element)
+
+                    } catch let error {
+                        self.finish(withError: error)
+                    }
+                } else {
+                    self.finish(withSuccess: nil)
+                }
+            } else {
+                self.finish(withError: HTTPError(statusCode: response.statusCode, response: response))
+            }
         }
     }
     // MARK: - Cancel
