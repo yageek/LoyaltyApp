@@ -58,4 +58,15 @@ public final class LoyaltyAPIClient {
         }
     }
 
+    @discardableResult public func getAllLoyalties(offset: UInt, limit: UInt, completion: @escaping (Result<CardPageResponse, Error>) -> Void) -> CancelableRequest {
+        let body: Int? = nil
+        return self.execute(api: .getLoyalties(limit: limit, offset: offset) , body: body) { (result: Result<CardPageResponse?, Error>) in
+            let converted: Result<CardPageResponse, Error> = result.flatMap({ Result.success($0!) })
+            completion(converted)
+        }
+    }
+
+
+
+
 }

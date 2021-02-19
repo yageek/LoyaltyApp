@@ -19,8 +19,8 @@ struct SigninRequest: Encodable {
 
 // MARK: - UserInfoResponse
 public struct UserInfoResponse: Decodable {
-    let id: Int
-    let email, name, pass: String
+    public let id: Int
+    public let email, name, pass: String
 }
 
 // MARK: - CardData
@@ -29,14 +29,14 @@ struct CardData: Encodable {
 }
 
 // MARK: - CardResource
-struct CardResource: Decodable {
-    let id: Int
-    let name, color, code: String
+public struct CardResource: Decodable, Hashable {
+    public let id: Int
+    public let name, color, code: String
 }
 
 // MARK: - CardResource
-struct CardPageResponse: Decodable {
-    let count: Int
-    let cards: [CardResource]
+public struct CardPageResponse: Decodable {
+    public let count: Int
+    public let cards: [CardResource]
 }
 

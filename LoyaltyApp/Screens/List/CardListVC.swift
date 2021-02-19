@@ -6,83 +6,115 @@
 //
 
 import UIKit
+import LoyaltyAPIClient
 
-private let reuseIdentifier = "Cell"
+private let CardCellID = "CardCell"
+private let LoadingCellID = "LoadingCell"
 
 final class CardListVC: UICollectionViewController {
+
+    enum Section: Hashable {
+        case main
+    }
+
+    enum Cell: Hashable {
+        case card(CardResource)
+        case loading
+    }
+
+    // MARK: - Var
+    private var currentOffset: UInt?
+    private var totalCount: Int?
+
+    private var elements: [CardResource] = []
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
-        // Do any additional setup after loading the view.
-    }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-    // MARK: UICollectionViewDataSource
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
+        let dataSource = UICollectionViewDiffableDataSource<Section, Cell>(collectionView: self.collectionView) { (collectionView, indexPath, element) -> UICollectionViewCell? in
+            switch  element {
+            case .card(let item):
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CardCellID, for: indexPath) as! CardCellView
+                cell.titleLabel.text = item.name
+                cell.codeLabel.text = item.code
+                return cell
+            case .loading:
+                return collectionView.dequeueReusableCell(withReuseIdentifier: LoadingCellID, for: indexPath)
+            }
+        }
+        self.collectionView.dataSource = dataSource
+        self.dataSource = dataSource
 
 
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
-    }
+        self.loadNextPage()
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-    
-        // Configure the cell
-    
-        return cell
     }
 
     // MARK: UICollectionViewDelegate
 
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let viewLayer = cell.contentView.layer
+        viewLayer.borderColor = UIColor.red.cgColor
+        viewLayer.borderWidth = 2.0
+        viewLayer.cornerRadius = 20.0
 
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
+        guard let dataSource = self.dataSource else { return }
+        if case .loading = dataSource.itemIdentifier(for: indexPath) {
+            self.loadNextPage()
+        }
     }
-    */
+    // MARK: - Loading
 
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
+    private func loadNextPage() {
 
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
+        if let totalCount = self.totalCount, self.elements.count >= totalCount { return }
 
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
+        let requestOffset: UInt
+        if let current = self.currentOffset {
+            requestOffset = current + 1
+        } else {
+            requestOffset = 0
+        }
+
+        let pageSize: UInt = 10
+        LoyaltyAPIClient.shared.getAllLoyalties(offset: requestOffset*pageSize, limit: pageSize) { (result) in
+            switch result {
+            case .failure(let error):
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
+                    self?.presentAlertController(message: error.localizedDescription)
+                }
+
+            case .success(let page):
+
+                if self.totalCount == nil {
+                    self.totalCount = page.count
+                }
+                // Memorize before
+
+                var newContents = self.elements
+                newContents.append(contentsOf: page.cards)
+
+                let contentSize = newContents.count
+
+                var patch = NSDiffableDataSourceSnapshot<Section, Cell>()
+                let cells = newContents.map { Cell.card($0) }
+                patch.appendSections([.main])
+                patch.appendItems(cells)
+
+                if contentSize < page.count {
+                    patch.appendItems([.loading])
+                }
+
+                self.currentOffset = requestOffset
+                self.elements = newContents
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
+                    self?.dataSource?.apply(patch)
+                }
+            }
+        }
     }
-    */
 
 }
