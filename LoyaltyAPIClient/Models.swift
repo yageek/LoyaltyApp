@@ -25,13 +25,15 @@ public struct UserInfoResponse: Decodable {
 
 // MARK: - CardData
 struct CardData: Encodable {
-    let name, color, code: String
+    let name, code: String
+    let color: String?
 }
 
 // MARK: - CardResource
 public struct CardResource: Decodable, Hashable {
     public let id: Int
-    public let name, color, code: String
+    public let name, code: String
+    public let color: String?
 }
 
 // MARK: - CardResource

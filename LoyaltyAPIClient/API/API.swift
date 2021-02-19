@@ -12,7 +12,7 @@ enum API {
     case signUp
     case signOut
     case addLoyalty
-    case updateLoyalty(id: String)
+    case updateLoyalty(id: Int)
     case deleteLoyalty(id: Int)
     case getLoyalties(limit: UInt, offset: UInt)
     case getUserInfos

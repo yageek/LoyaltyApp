@@ -119,10 +119,26 @@ final class CardListVC: UICollectionViewController {
 
     // MARK: - Unwind
     @IBAction func unwindFromUserInfo(segue: UIStoryboardSegue) { }
+    @IBAction func unwindFromAddEditCancel(segue: UIStoryboardSegue) { }
+    @IBAction func unwindFromAddEdit(segue: UIStoryboardSegue) {
+        self.resetData()
+    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let infosVC = segue.destination as? InfosVC {
             infosVC.totalCount = self.totalCount ?? -1
         }
+    }
+
+    private func resetData() {
+        self.elements.removeAll()
+        self.currentOffset = nil
+        self.totalCount = nil
+
+        var patch = NSDiffableDataSourceSnapshot<Section, Cell>()
+        self.dataSource?.apply(patch)
+
+        loadNextPage()
+
     }
 }

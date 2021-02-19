@@ -32,6 +32,15 @@ final class InfosVC: UIViewController {
                 }
             }
         }
+    }
 
+    @IBAction func logOutTriggered(_ sender: Any) {
+
+        LoyaltyAPIClient.shared.signOut() { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
+                guard let self = self else { return  }
+                self.performSegue(withIdentifier: "unwindFromUserInfoToSignInSegue", sender: self)
+            }
+        }
     }
 }

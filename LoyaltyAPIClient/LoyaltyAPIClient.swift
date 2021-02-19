@@ -42,7 +42,7 @@ public final class LoyaltyAPIClient {
         }
     }
 
-    @discardableResult public func signOut(email: String, password: String, completion: @escaping (Result<(), Error>) -> Void) -> CancelableRequest {
+    @discardableResult public func signOut(completion: @escaping (Result<(), Error>) -> Void) -> CancelableRequest {
         let body: Int? = nil
         return self.execute(api: .signOut , body: body) { (result: Result<String?, Error>) in
             let converted: Result<(), Error> = result.flatMap({ _ in Result.success(()) })
@@ -66,6 +66,21 @@ public final class LoyaltyAPIClient {
         }
     }
 
+    @discardableResult public func addLoyalty(name: String, code: String, color: String?, completion: @escaping (Result<CardResource, Error>) -> Void) -> CancelableRequest {
+        let body = CardData(name: name, code: code, color: color)
+        return self.execute(api: .addLoyalty , body: body) { (result: Result<CardResource?, Error>) in
+            let converted: Result<CardResource, Error> = result.flatMap({ Result.success($0!) })
+            completion(converted)
+        }
+    }
+
+    @discardableResult public func updateLoyalty(id: Int, name: String, code: String, color: String?, completion: @escaping (Result<CardResource, Error>) -> Void) -> CancelableRequest {
+        let body = CardData(name: name, code: code, color: color)
+        return self.execute(api: .updateLoyalty(id: id) , body: body) { (result: Result<CardResource?, Error>) in
+            let converted: Result<CardResource, Error> = result.flatMap({ Result.success($0!) })
+            completion(converted)
+        }
+    }
 
 
 
