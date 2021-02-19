@@ -24,12 +24,14 @@ enum Method {
     }
 }
 
+enum ResponseFormat {
+    case json, text;
+}
+
 protocol Endpoint {
     var method: Method { get }
     var baseHost: URL { get }
     var path: String { get }
     var params: [String: Any?] { get }
+    var responseFormat: ResponseFormat { get }
 }
-
-
-

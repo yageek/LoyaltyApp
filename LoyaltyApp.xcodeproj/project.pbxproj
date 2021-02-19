@@ -14,6 +14,7 @@
 		882715AB25DEA85500147F20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 882715AA25DEA85500147F20 /* Assets.xcassets */; };
 		882715AE25DEA85500147F20 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 882715AC25DEA85500147F20 /* LaunchScreen.storyboard */; };
 		882715BD25DEBBB000147F20 /* CardCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882715BC25DEBBB000147F20 /* CardCellView.swift */; };
+		8828917B25DFB183008FE0AD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8828917A25DFB183008FE0AD /* Utils.swift */; };
 		8895DF5525DEC84600E585C4 /* LoyaltyAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 8895DF5325DEC84600E585C4 /* LoyaltyAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8895DF5825DEC84600E585C4 /* LoyaltyAPIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */; };
 		8895DF5925DEC84600E585C4 /* LoyaltyAPIClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -63,6 +64,7 @@
 		882715AD25DEA85500147F20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		882715AF25DEA85500147F20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		882715BC25DEBBB000147F20 /* CardCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCellView.swift; sourceTree = "<group>"; };
+		8828917A25DFB183008FE0AD /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LoyaltyAPIClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8895DF5325DEC84600E585C4 /* LoyaltyAPIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoyaltyAPIClient.h; sourceTree = "<group>"; };
 		8895DF5425DEC84600E585C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				882715AA25DEA85500147F20 /* Assets.xcassets */,
 				882715AC25DEA85500147F20 /* LaunchScreen.storyboard */,
 				882715AF25DEA85500147F20 /* Info.plist */,
+				8828917A25DFB183008FE0AD /* Utils.swift */,
 			);
 			path = LoyaltyApp;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 			files = (
 				882715A625DEA85400147F20 /* SignInVC.swift in Sources */,
 				882715A225DEA85400147F20 /* AppDelegate.swift in Sources */,
+				8828917B25DFB183008FE0AD /* Utils.swift in Sources */,
 				882715BD25DEBBB000147F20 /* CardCellView.swift in Sources */,
 				88E6039325DEC121000CE124 /* CardListVC.swift in Sources */,
 				88E6039725DEC307000CE124 /* SignUpVC.swift in Sources */,

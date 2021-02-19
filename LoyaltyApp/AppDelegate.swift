@@ -6,6 +6,11 @@
 //
 
 import UIKit
+import LoyaltyAPIClient
+
+extension LoyaltyAPIClient {
+    static let shared = LoyaltyAPIClient()
+}
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

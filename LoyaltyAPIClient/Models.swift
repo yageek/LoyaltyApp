@@ -14,17 +14,17 @@ struct SignupRequest: Encodable {
 
 // MARK: - SignInRequest
 struct SigninRequest: Encodable {
-    let name, pass: String
+    let email, pass: String
 }
 
 // MARK: - UserInfoResponse
-struct UserInfoResponse: Decodable {
+public struct UserInfoResponse: Decodable {
     let id: Int
     let email, name, pass: String
 }
 
-// MARK: - AddCardRequest
-struct AddCardRequest: Encodable {
+// MARK: - CardData
+struct CardData: Encodable {
     let name, color, code: String
 }
 

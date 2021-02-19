@@ -6,15 +6,16 @@
 //
 
 import Foundation
-final class RequestOperation<E: Endpoint, Body: Encodable, ResponseBody: Decodable>: BaseOperation {
+final class RequestOperation<E: Endpoint, Body: Encodable, ResponseData: Decodable>: BaseOperation {
 
+    struct UnexpectedType: Error { }
     struct HTTPError: Error {
         let statusCode: Int
         let response: HTTPURLResponse
     }
 
     // MARK: - Var
-    typealias Completion = (Result<ResponseBody?, Error>) -> Void
+    typealias Completion = (Result<ResponseData?, Error>) -> Void
     private let session: URLSession
     private let endpoint: E
     private let body: Body?
@@ -64,17 +65,26 @@ final class RequestOperation<E: Endpoint, Body: Encodable, ResponseBody: Decodab
             if response.statusCode >= 200 && response.statusCode < 300 {
 
                 if let data = data {
-
-                    do {
-                        let element: ResponseBody = try JSONDecoder().decode(ResponseBody.self, from: data)
-                        self.finish(withSuccess: element)
-
-                    } catch let error {
-                        self.finish(withError: error)
+                    switch self.endpoint.responseFormat {
+                    case .json:
+                        do {
+                            let output = try JSONDecoder().decode(ResponseData.self, from: data)
+                            self.finish(withSuccess: output)
+                        } catch let error {
+                            self.finish(withError: error)
+                        }
+                    case .text:
+                         let out = String(data: data, encoding: .utf8)
+                        if let out = out as? ResponseData {
+                            self.finish(withSuccess: out)
+                        } else {
+                            self.finish(withError: UnexpectedType())
+                        }
                     }
                 } else {
                     self.finish(withSuccess: nil)
                 }
+
             } else {
                 self.finish(withError: HTTPError(statusCode: response.statusCode, response: response))
             }
@@ -89,7 +99,7 @@ final class RequestOperation<E: Endpoint, Body: Encodable, ResponseBody: Decodab
     }
 
     // MARK: - Finish
-    func finish(withSuccess success: ResponseBody?) {
+    func finish(withSuccess success: ResponseData?) {
         self.responseCompletion(.success(success))
         self.finish()
     }
@@ -109,11 +119,13 @@ final class RequestOperation<E: Endpoint, Body: Encodable, ResponseBody: Decodab
 
         let pathURL = endpoint.baseHost.appendingPathComponent(endpoint.path)
         var components = URLComponents(url: pathURL, resolvingAgainstBaseURL: true)
-        components?.queryItems = parameters.sorted(by: { $0.key > $1.key }).map { value in
-            return URLQueryItem(name: value.key, value: "\(value.value)")
+        if !parameters.isEmpty {
+            components?.queryItems = parameters.sorted(by: { $0.key > $1.key }).map { value in
+                return URLQueryItem(name: value.key, value: "\(value.value)")
+            }
         }
-
         guard let url = components?.url else { fatalError("Wrong API specification")}
+        print("⚙️ URL: \(url)")
         return url
     }
 
@@ -122,15 +134,21 @@ final class RequestOperation<E: Endpoint, Body: Encodable, ResponseBody: Decodab
         let url = RequestOperation.urlPath(from: endpoint)
 
         var request = URLRequest(url: url)
+        var headers: [String: String] = ["User-Agent": "LoyaltyAPIClient Client"]
+
         request.httpMethod = endpoint.method.httpMethod
 
         // Body
         if let body = body {
             let data = try JSONEncoder().encode(body)
             request.httpBody = data
+            headers["Content-Type"] = "application/json"
         }
-        return request
 
+        request.allHTTPHeaderFields = headers
+        print("⚙️ Request: \(request)")
+        print("⚙️ Request header: \(request.allHTTPHeaderFields ?? [:]) ")
+        return request
     }
 
 }
