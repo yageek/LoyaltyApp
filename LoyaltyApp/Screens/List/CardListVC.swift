@@ -117,4 +117,12 @@ final class CardListVC: UICollectionViewController {
         }
     }
 
+    // MARK: - Unwind
+    @IBAction func unwindFromUserInfo(segue: UIStoryboardSegue) { }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let infosVC = segue.destination as? InfosVC {
+            infosVC.totalCount = self.totalCount ?? -1
+        }
+    }
 }

@@ -391,8 +391,15 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Informations" id="obr-Dw-TIh"/>
+                    <connections>
+                        <outlet property="emailLabel" destination="KA3-bE-bkb" id="9L5-l5-hKj"/>
+                        <outlet property="loyaltyCountLabel" destination="Ag0-1x-FGh" id="BV4-lO-bfS"/>
+                        <outlet property="nameLabel" destination="lkM-gc-1fu" id="zDj-OM-rYn"/>
+                        <segue destination="HtN-FA-Cid" kind="unwind" identifier="unwindToCardListFromInfo" unwindAction="unwindFromUserInfoWithSegue:" id="elv-ZL-w77"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fUB-lS-fhX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="HtN-FA-Cid" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2088" y="-15"/>
         </scene>

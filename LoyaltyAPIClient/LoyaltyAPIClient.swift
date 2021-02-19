@@ -52,7 +52,7 @@ public final class LoyaltyAPIClient {
 
     @discardableResult public func getUserInfo(completion: @escaping (Result<UserInfoResponse, Error>) -> Void) -> CancelableRequest {
         let body: Int? = nil
-        return self.execute(api: .signOut , body: body) { (result: Result<UserInfoResponse?, Error>) in
+        return self.execute(api: .getUserInfos , body: body) { (result: Result<UserInfoResponse?, Error>) in
             let converted: Result<UserInfoResponse, Error> = result.flatMap({ Result.success($0!) })
             completion(converted)
         }
