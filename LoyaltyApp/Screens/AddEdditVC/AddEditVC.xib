@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddEditVC" customModule="LoyaltyApp" customModuleProvider="target">
+            <connections>
+                <outlet property="codeTextField" destination="daI-Dp-nA3" id="XRG-aG-KJW"/>
+                <outlet property="colorTextField" destination="aTW-oh-BaL" id="7SM-LV-YqJ"/>
+                <outlet property="nameTextField" destination="tiJ-vx-9gG" id="OTm-OR-4Qq"/>
+                <outlet property="view" destination="VDc-4s-dQE" id="XLY-Kl-KLh"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="VDc-4s-dQE">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Card" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ppf-wL-JvG">
+                    <rect key="frame" x="138" y="94" width="138" height="41"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="Kh1-qC-uyv">
+                    <rect key="frame" x="20" y="179" width="374" height="201"/>
+                    <subviews>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tiJ-vx-9gG">
+                            <rect key="frame" x="0.0" y="0.0" width="374" height="34"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="email"/>
+                        </textField>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Code" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="daI-Dp-nA3">
+                            <rect key="frame" x="0.0" y="57" width="374" height="34"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="email"/>
+                        </textField>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Color" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aTW-oh-BaL">
+                            <rect key="frame" x="0.0" y="114" width="374" height="34"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="go" secureTextEntry="YES" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                        </textField>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zSI-wI-Vdd">
+                            <rect key="frame" x="0.0" y="171" width="374" height="30"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bwg-NQ-e5S">
+                                    <rect key="frame" x="0.0" y="0.0" width="183" height="30"/>
+                                    <state key="normal" title="Add"/>
+                                    <connections>
+                                        <action selector="addEditTriggered:" destination="-1" eventType="touchUpInside" id="XOq-Dv-1CH"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ag-8b-YZa">
+                                    <rect key="frame" x="191" y="0.0" width="183" height="30"/>
+                                    <state key="normal" title="Cancel"/>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="6tL-GK-v85"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="Kh1-qC-uyv" firstAttribute="top" secondItem="ppf-wL-JvG" secondAttribute="bottom" constant="44" id="3In-yK-Oj4"/>
+                <constraint firstItem="ppf-wL-JvG" firstAttribute="top" secondItem="6tL-GK-v85" secondAttribute="top" constant="50" id="6qs-l9-oBN"/>
+                <constraint firstItem="Kh1-qC-uyv" firstAttribute="leading" secondItem="6tL-GK-v85" secondAttribute="leading" constant="20" id="C1d-2a-8sJ"/>
+                <constraint firstItem="ppf-wL-JvG" firstAttribute="centerX" secondItem="6tL-GK-v85" secondAttribute="centerX" id="KHm-0g-0DY"/>
+                <constraint firstItem="6tL-GK-v85" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Kh1-qC-uyv" secondAttribute="bottom" constant="20" id="SCZ-v7-5Lj"/>
+                <constraint firstItem="6tL-GK-v85" firstAttribute="trailing" secondItem="Kh1-qC-uyv" secondAttribute="trailing" constant="20" id="ohb-gX-md9"/>
+            </constraints>
+            <point key="canvasLocation" x="-123" y="-15"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

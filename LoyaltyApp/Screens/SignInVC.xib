@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SignInVC" customModule="LoyaltyApp" customModuleProvider="target">
+            <connections>
+                <outlet property="activityIndicator" destination="BRW-kb-S59" id="VRZ-D1-uql"/>
+                <outlet property="emailTextField" destination="1CI-3g-jdE" id="hdG-Q1-pmh"/>
+                <outlet property="passwordTextField" destination="KZX-aw-fAs" id="CPI-Vi-GMm"/>
+                <outlet property="signInButton" destination="TYa-tt-zI4" id="FB8-rA-6ic"/>
+                <outlet property="view" destination="kRv-lb-V8G" id="mgV-qZ-qUV"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="kRv-lb-V8G">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My loyalty" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jaa-cw-MzH">
+                    <rect key="frame" x="133.5" y="119" width="147" height="41"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="6ds-Cd-t9j">
+                    <rect key="frame" x="167" y="179.5" width="80" height="80.5"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="IBU-kn-Joh"/>
+                        <constraint firstAttribute="width" constant="80" id="r5J-SF-eKG"/>
+                    </constraints>
+                    <imageReference key="image" image="giftcard" catalog="system" symbolScale="large"/>
+                </imageView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="PNt-qs-KCp">
+                    <rect key="frame" x="41.5" y="300" width="331" height="187"/>
+                    <subviews>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1CI-3g-jdE">
+                            <rect key="frame" x="0.0" y="0.0" width="331" height="34"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="email"/>
+                        </textField>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KZX-aw-fAs">
+                            <rect key="frame" x="0.0" y="57" width="331" height="34"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" secureTextEntry="YES" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="password"/>
+                        </textField>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TYa-tt-zI4">
+                            <rect key="frame" x="0.0" y="114" width="331" height="30"/>
+                            <state key="normal" title="Sign in"/>
+                            <connections>
+                                <action selector="singInTriggered:" destination="-1" eventType="touchUpInside" id="NxC-7A-MAT"/>
+                            </connections>
+                        </button>
+                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="BRW-kb-S59">
+                            <rect key="frame" x="0.0" y="167" width="331" height="20"/>
+                        </activityIndicatorView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="tW9-g8-Bdq"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="PNt-qs-KCp" firstAttribute="centerX" secondItem="tW9-g8-Bdq" secondAttribute="centerX" id="A5W-ee-S39"/>
+                <constraint firstItem="Jaa-cw-MzH" firstAttribute="top" secondItem="tW9-g8-Bdq" secondAttribute="top" constant="75" id="RGl-6z-1pX"/>
+                <constraint firstItem="6ds-Cd-t9j" firstAttribute="centerX" secondItem="tW9-g8-Bdq" secondAttribute="centerX" id="Ru2-qW-PcT"/>
+                <constraint firstItem="6ds-Cd-t9j" firstAttribute="top" secondItem="Jaa-cw-MzH" secondAttribute="bottom" constant="20" id="ZO8-yA-Pec"/>
+                <constraint firstItem="Jaa-cw-MzH" firstAttribute="centerX" secondItem="kRv-lb-V8G" secondAttribute="centerX" id="n7r-tg-we1"/>
+                <constraint firstItem="PNt-qs-KCp" firstAttribute="width" secondItem="kRv-lb-V8G" secondAttribute="width" multiplier="0.8" id="pPy-sk-jTh"/>
+                <constraint firstItem="PNt-qs-KCp" firstAttribute="top" secondItem="6ds-Cd-t9j" secondAttribute="bottom" constant="40" id="zaB-nV-KoE"/>
+            </constraints>
+            <point key="canvasLocation" x="-535" y="-15"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="giftcard" catalog="system" width="128" height="88"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

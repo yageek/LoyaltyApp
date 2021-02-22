@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InfosVC" customModule="LoyaltyApp" customModuleProvider="target">
+            <connections>
+                <outlet property="emailLabel" destination="mdF-Ol-OZY" id="0fx-ha-RLz"/>
+                <outlet property="loyaltyCountLabel" destination="cIV-sa-8OF" id="It6-DQ-l8s"/>
+                <outlet property="nameLabel" destination="g1I-qI-AZo" id="R5f-Fz-yk7"/>
+                <outlet property="view" destination="bVg-CD-5zb" id="3NH-QH-Fez"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="bVg-CD-5zb">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="info.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="6c4-tB-s2w">
+                    <rect key="frame" x="20" y="94.5" width="80" height="79"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="80" id="k7u-q7-w1y"/>
+                        <constraint firstAttribute="height" constant="80" id="zpl-K4-Uat"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m67-MN-DQg">
+                    <rect key="frame" x="183" y="277" width="48" height="30"/>
+                    <state key="normal" title="Logout"/>
+                    <connections>
+                        <action selector="logOutTriggered:" destination="-1" eventType="touchUpInside" id="mWX-CV-cRh"/>
+                    </connections>
+                </button>
+                <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" alignment="top" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="eEp-As-GKf">
+                    <rect key="frame" x="87" y="124" width="294" height="90"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g1I-qI-AZo">
+                            <rect key="frame" x="0.0" y="0.0" width="52" height="24"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdF-Ol-OZY">
+                            <rect key="frame" x="0.0" y="37" width="47" height="24"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loyalty count" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cIV-sa-8OF">
+                            <rect key="frame" x="0.0" y="74" width="81.5" height="16"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="h0q-Nc-Wvf"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="h0q-Nc-Wvf" firstAttribute="trailing" secondItem="eEp-As-GKf" secondAttribute="trailing" constant="10" id="JwD-4m-Q02"/>
+                <constraint firstItem="6c4-tB-s2w" firstAttribute="top" secondItem="h0q-Nc-Wvf" secondAttribute="top" constant="50" id="K8e-Iu-9OZ"/>
+                <constraint firstItem="6c4-tB-s2w" firstAttribute="leading" secondItem="h0q-Nc-Wvf" secondAttribute="leading" constant="20" id="fso-8p-hrO"/>
+                <constraint firstItem="eEp-As-GKf" firstAttribute="top" secondItem="6c4-tB-s2w" secondAttribute="top" id="lsJ-7S-6kY"/>
+                <constraint firstItem="m67-MN-DQg" firstAttribute="top" secondItem="eEp-As-GKf" secondAttribute="bottom" constant="50" id="mZ9-gg-3d0"/>
+                <constraint firstItem="eEp-As-GKf" firstAttribute="leading" secondItem="6c4-tB-s2w" secondAttribute="trailing" constant="10" id="zNg-Tp-hHF"/>
+                <constraint firstItem="m67-MN-DQg" firstAttribute="centerX" secondItem="h0q-Nc-Wvf" secondAttribute="centerX" id="zzj-at-Q6C"/>
+            </constraints>
+            <point key="canvasLocation" x="-125" y="-15"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="info.circle" catalog="system" width="128" height="121"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

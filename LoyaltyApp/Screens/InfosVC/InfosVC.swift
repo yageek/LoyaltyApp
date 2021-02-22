@@ -14,6 +14,16 @@ final class InfosVC: UIViewController {
     @IBOutlet weak var loyaltyCountLabel: UILabel!
 
     var totalCount: Int = 0
+
+    // MARK: - Init
+    init() {
+        super.init(nibName: "InfosVC", bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -9,13 +9,21 @@ import UIKit
 import LoyaltyAPIClient
 
 final class AddEditVC: UIViewController {
-    @IBOutlet weak var addEditButton: UIButton!
-    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet private(set) weak var addEditButton: UIButton!
+    @IBOutlet private(set) weak var nameTextField: UITextField!
 
-    @IBOutlet weak var codeTextField: UITextField!
-    @IBOutlet weak var colorTextField: UITextField!
+    @IBOutlet private(set) weak var codeTextField: UITextField!
+    @IBOutlet private(set) weak var colorTextField: UITextField!
     var currentModel: CardResource?
 
+    // MARK: - Init
+    init() {
+        super.init(nibName: "AddEditVC", bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
     }

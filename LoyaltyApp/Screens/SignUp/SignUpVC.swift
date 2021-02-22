@@ -10,12 +10,21 @@ import LoyaltyAPIClient
 
 final class SignUpVC: UIViewController {
 
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var signUpButton: UIButton!
-    @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet private(set) weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private(set) weak var signUpButton: UIButton!
+    @IBOutlet private(set) weak var passwordTextField: UITextField!
+    @IBOutlet private(set) weak var emailTextField: UITextField!
+    @IBOutlet private(set) weak var nameTextField: UITextField!
 
+    // MARK: - Init
+    init() {
+        super.init(nibName: "SignUpVC", bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     @IBAction private func signupTriggered(_ sender: Any) {
         self.trySignup()
     }

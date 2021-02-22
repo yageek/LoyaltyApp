@@ -10,11 +10,20 @@ import LoyaltyAPIClient
 
 final class SignInVC: UIViewController {
 
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var signInButton: UIButton!
+    @IBOutlet private(set) weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private(set) weak var passwordTextField: UITextField!
+    @IBOutlet private(set) weak var emailTextField: UITextField!
+    @IBOutlet private(set) weak var signInButton: UIButton!
 
+
+    // MARK: - Init
+    init() {
+        super.init(nibName: "SignInVC", bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - Action
     @IBAction func singInTriggered(_ sender: Any) {
