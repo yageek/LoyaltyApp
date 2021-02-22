@@ -12,32 +12,21 @@ import RxCocoa
 
 protocol SignInVCDelegate: AnyObject {
     func signInViewControllerDidSignInWithSuccess(_ controller: SignInVC)
-    func signInViewControllerDidFailedToSignIn(_ controller: SignInVC, credential:SignInVC.Credential, error: Error)
+    func signInViewControllerDidFailedToSignIn(_ controller: SignInVC, credential: String, error: Error)
 }
 
 final class SignInVC: UIViewController {
-
-    typealias Dependencies = HasAPIClientService
-
-    struct Credential {
-        let email: String
-        let password: String
-    }
-
     // MARK: - iVar | iVar
     @IBOutlet private(set) weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private(set) weak var passwordTextField: UITextField!
     @IBOutlet private(set) weak var emailTextField: UITextField!
     @IBOutlet private(set) weak var signInButton: UIButton!
-
-    private let dependencies: Dependencies
     private let disposeBag = DisposeBag()
-
     weak var delegate: SignInVCDelegate?
 
+    private var viewModel: SignInViewModel?
     // MARK: - Init
-    init(dependencies: Dependencies) {
-        self.dependencies = dependencies
+    init() {
         super.init(nibName: "SignInVC", bundle: nil)
     }
 
@@ -45,49 +34,34 @@ final class SignInVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Action
-    @IBAction func singInTriggered(_ sender: Any) {
-        self.trySignIn()
-    }
+    // MARK: - View lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-    // MARK: - Send
-    func trySignIn() {
 
-        let email = emailTextField.text ?? ""
-        let pass = passwordTextField.text ?? ""
+        let viewModel = SignInViewModel(dependencies: DI(), emailTextField: self.emailTextField.rx.text.asObservable(), passwordTextField: self.passwordTextField.rx.text.asObservable(), buttonTriggered:  self.signInButton.rx.controlEvent(.touchUpInside).asObservable())
 
-        self.activityIndicator.startAnimating()
+        // Loading indicator
+        viewModel.isActivityIndicatorAnimating.drive(activityIndicator.rx.isAnimating).disposed(by: self.disposeBag)
 
-        self.dependencies.apiService.rx_signIn(email: email, password: pass)
-            .delaySubscription(.milliseconds(800), scheduler: MainScheduler.instance)
-            .subscribe(onSuccess: { [weak self] _ in
-                guard let self = self else { return }
+        // Locking input
+        viewModel.inputEnabled.drive(passwordTextField.rx.isEnabled).disposed(by: self.disposeBag)
+        viewModel.inputEnabled.drive(emailTextField.rx.isEnabled).disposed(by: self.disposeBag)
+        viewModel.inputEnabled.drive(signInButton.rx.isEnabled).disposed(by: self.disposeBag)
 
+        // Sign in result
+        viewModel.signInResult.drive(onNext: { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let credentialError):
+                self.delegate?.signInViewControllerDidFailedToSignIn(self, credential: credentialError.email, error: credentialError.error)
+            case .success(_):
                 self.delegate?.signInViewControllerDidSignInWithSuccess(self)
-            }, onFailure: { [weak self] (error) in
-                guard let self = self else { return }
-                let credential = Credential(email: email, password: pass)
-                self.delegate?.signInViewControllerDidFailedToSignIn(self, credential: credential, error: error)
-
-            }).disposed(by: self.disposeBag)
-
-// Combine version:
-//        self.dependencies.apiService.signIn(email: email, password: pass)
-//            .delay(for: .milliseconds(800), scheduler: DispatchQueue.main)
-//            .sink { [weak self] (completion) in
-//                guard let self = self else { return }
-//                let credential = Credential(email: email, password: pass)
-//                if case .failure(let error) = completion {
-//                    self.delegate?.signInViewControllerDidFailedToSignIn(self, credential: credential, error: error)
-//                }
-//
-//        } receiveValue: { [weak self] error in
-//            guard let self = self else { return }
-//
-//            self.delegate?.signInViewControllerDidSignInWithSuccess(self)
-//
-//        }.store(in: &self.disposeBag)
+            }
+        }).disposed(by: self.disposeBag)
+        self.viewModel = viewModel
     }
 }
+
 
 

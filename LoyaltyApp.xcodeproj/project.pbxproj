@@ -22,6 +22,7 @@
 		8860548A25E3F2B400B552FE /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548825E3F2B400B552FE /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8860548D25E3F4BC00B552FE /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548C25E3F4BC00B552FE /* RxRelay.xcframework */; };
 		8860548E25E3F4BC00B552FE /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548C25E3F4BC00B552FE /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8860549125E3F85C00B552FE /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8860549025E3F85C00B552FE /* SignInViewModel.swift */; };
 		8895DF5525DEC84600E585C4 /* LoyaltyAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 8895DF5325DEC84600E585C4 /* LoyaltyAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8895DF5825DEC84600E585C4 /* LoyaltyAPIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */; };
 		8895DF5925DEC84600E585C4 /* LoyaltyAPIClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -86,6 +87,7 @@
 		8860548425E3F2B000B552FE /* RxCocoa.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxCocoa.xcframework; path = thirdParty/RxCocoa.xcframework; sourceTree = "<group>"; };
 		8860548825E3F2B400B552FE /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = thirdParty/RxSwift.xcframework; sourceTree = "<group>"; };
 		8860548C25E3F4BC00B552FE /* RxRelay.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxRelay.xcframework; path = thirdParty/RxRelay.xcframework; sourceTree = "<group>"; };
+		8860549025E3F85C00B552FE /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LoyaltyAPIClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8895DF5325DEC84600E585C4 /* LoyaltyAPIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoyaltyAPIClient.h; sourceTree = "<group>"; };
 		8895DF5425DEC84600E585C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 			children = (
 				882715A525DEA85400147F20 /* SignInVC.swift */,
 				88F5DF9925E3C7A0001E7E4B /* SignInVC.xib */,
+				8860549025E3F85C00B552FE /* SignInViewModel.swift */,
 			);
 			name = SignIn;
 			sourceTree = "<group>";
@@ -400,6 +403,7 @@
 				88F5DFBA25E3E8C2001E7E4B /* Services.swift in Sources */,
 				88E6039725DEC307000CE124 /* SignUpVC.swift in Sources */,
 				88E6039F25DEC360000CE124 /* InfosVC.swift in Sources */,
+				8860549125E3F85C00B552FE /* SignInViewModel.swift in Sources */,
 				882715A425DEA85400147F20 /* SceneDelegate.swift in Sources */,
 				88E6039C25DEC32C000CE124 /* AddEditVC.swift in Sources */,
 			);
