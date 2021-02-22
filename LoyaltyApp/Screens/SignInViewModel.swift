@@ -29,6 +29,8 @@ final class SignInViewModel {
     let signInResult: Driver<Result<(), CredentialError>>
     var inputEnabled: Driver<Bool>
 
+    static let delayInterval: DispatchTimeInterval = .milliseconds(800)
+    
     // MARK: - Init
     init(dependencies: Dependencies, emailTextField: Observable<String?>, passwordTextField: Observable<String?>, buttonTriggered: Observable<()>) {
         self.dependencies = dependencies
@@ -47,7 +49,7 @@ final class SignInViewModel {
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(true)
             })
-            .flatMap { dependencies.apiService.rx_signIn(email: $0.0, password: $0.1).delaySubscription(.seconds(3), scheduler: MainScheduler.instance) }
+            .flatMap { dependencies.apiService.signIn(email: $0.0, password: $0.1).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance) }
 
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(false)

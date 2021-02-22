@@ -32,6 +32,16 @@
 		8895DF6925DECBB100E585C4 /* BaseOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895DF6825DECBB100E585C4 /* BaseOperation.swift */; };
 		8895DF7125DECC4E00E585C4 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895DF7025DECC4E00E585C4 /* API.swift */; };
 		8895DF7425DECCF600E585C4 /* RequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895DF7325DECCF600E585C4 /* RequestOperation.swift */; };
+		88D5299B25E40F6700C75A24 /* RxBlocking.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D5299A25E40F6700C75A24 /* RxBlocking.xcframework */; };
+		88D5299C25E40F6700C75A24 /* RxBlocking.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 88D5299A25E40F6700C75A24 /* RxBlocking.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		88D529AE25E411CB00C75A24 /* RxBlocking.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D5299A25E40F6700C75A24 /* RxBlocking.xcframework */; };
+		88D529AF25E411CB00C75A24 /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548C25E3F4BC00B552FE /* RxRelay.xcframework */; };
+		88D529B025E411CB00C75A24 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548825E3F2B400B552FE /* RxSwift.xcframework */; };
+		88D529B625E4120D00C75A24 /* RxTest.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D529B525E4120D00C75A24 /* RxTest.xcframework */; };
+		88D529C025E4124400C75A24 /* SignInViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D529BF25E4124400C75A24 /* SignInViewModelTests.swift */; };
+		88D529C825E4126000C75A24 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8860549025E3F85C00B552FE /* SignInViewModel.swift */; };
+		88D529CC25E4127E00C75A24 /* Providers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D529CB25E4127E00C75A24 /* Providers.swift */; };
+		88D529CF25E4128E00C75A24 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F5DFB925E3E8C2001E7E4B /* Services.swift */; };
 		88E6039325DEC121000CE124 /* CardListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E6039225DEC121000CE124 /* CardListVC.swift */; };
 		88E6039725DEC307000CE124 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E6039625DEC307000CE124 /* SignUpVC.swift */; };
 		88E6039C25DEC32C000CE124 /* AddEditVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E6039B25DEC32C000CE124 /* AddEditVC.swift */; };
@@ -66,6 +76,7 @@
 				8860548A25E3F2B400B552FE /* RxSwift.xcframework in Embed Frameworks */,
 				8895DF5925DEC84600E585C4 /* LoyaltyAPIClient.framework in Embed Frameworks */,
 				8860548E25E3F4BC00B552FE /* RxRelay.xcframework in Embed Frameworks */,
+				88D5299C25E40F6700C75A24 /* RxBlocking.xcframework in Embed Frameworks */,
 				8860548625E3F2B000B552FE /* RxCocoa.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -97,6 +108,13 @@
 		8895DF6825DECBB100E585C4 /* BaseOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseOperation.swift; sourceTree = "<group>"; };
 		8895DF7025DECC4E00E585C4 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		8895DF7325DECCF600E585C4 /* RequestOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestOperation.swift; sourceTree = "<group>"; };
+		88D5299A25E40F6700C75A24 /* RxBlocking.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxBlocking.xcframework; path = thirdParty/RxBlocking.xcframework; sourceTree = "<group>"; };
+		88D529A425E411B000C75A24 /* LoyaltyAppIsolatedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoyaltyAppIsolatedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		88D529A825E411B000C75A24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		88D529B525E4120D00C75A24 /* RxTest.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxTest.xcframework; path = thirdParty/RxTest.xcframework; sourceTree = "<group>"; };
+		88D529BE25E4124400C75A24 /* LoyaltyAppIsolatedTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LoyaltyAppIsolatedTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		88D529BF25E4124400C75A24 /* SignInViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModelTests.swift; sourceTree = "<group>"; };
+		88D529CB25E4127E00C75A24 /* Providers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Providers.swift; sourceTree = "<group>"; };
 		88E6039225DEC121000CE124 /* CardListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListVC.swift; sourceTree = "<group>"; };
 		88E6039625DEC307000CE124 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		88E6039B25DEC32C000CE124 /* AddEditVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditVC.swift; sourceTree = "<group>"; };
@@ -119,6 +137,7 @@
 				8860548925E3F2B400B552FE /* RxSwift.xcframework in Frameworks */,
 				8895DF5825DEC84600E585C4 /* LoyaltyAPIClient.framework in Frameworks */,
 				8860548D25E3F4BC00B552FE /* RxRelay.xcframework in Frameworks */,
+				88D5299B25E40F6700C75A24 /* RxBlocking.xcframework in Frameworks */,
 				8860548525E3F2B000B552FE /* RxCocoa.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,6 +149,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		88D529A125E411B000C75A24 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88D529B625E4120D00C75A24 /* RxTest.xcframework in Frameworks */,
+				88D529AE25E411CB00C75A24 /* RxBlocking.xcframework in Frameworks */,
+				88D529AF25E411CB00C75A24 /* RxRelay.xcframework in Frameworks */,
+				88D529B025E411CB00C75A24 /* RxSwift.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -138,6 +168,7 @@
 			children = (
 				882715A025DEA85400147F20 /* LoyaltyApp */,
 				8895DF5225DEC84600E585C4 /* LoyaltyAPIClient */,
+				88D529A525E411B000C75A24 /* LoyaltyAppIsolatedTests */,
 				8827159F25DEA85400147F20 /* Products */,
 				8860547F25E3F2AC00B552FE /* Frameworks */,
 			);
@@ -148,6 +179,7 @@
 			children = (
 				8827159E25DEA85400147F20 /* LoyaltyApp.app */,
 				8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */,
+				88D529A425E411B000C75A24 /* LoyaltyAppIsolatedTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -180,6 +212,8 @@
 		8860547F25E3F2AC00B552FE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				88D529B525E4120D00C75A24 /* RxTest.xcframework */,
+				88D5299A25E40F6700C75A24 /* RxBlocking.xcframework */,
 				8860548C25E3F4BC00B552FE /* RxRelay.xcframework */,
 				8860548825E3F2B400B552FE /* RxSwift.xcframework */,
 				8860548425E3F2B000B552FE /* RxCocoa.xcframework */,
@@ -217,6 +251,24 @@
 				8895DF7025DECC4E00E585C4 /* API.swift */,
 			);
 			path = API;
+			sourceTree = "<group>";
+		};
+		88D529A525E411B000C75A24 /* LoyaltyAppIsolatedTests */ = {
+			isa = PBXGroup;
+			children = (
+				88D529BD25E4122F00C75A24 /* SignIn */,
+				88D529A825E411B000C75A24 /* Info.plist */,
+			);
+			path = LoyaltyAppIsolatedTests;
+			sourceTree = "<group>";
+		};
+		88D529BD25E4122F00C75A24 /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				88D529BF25E4124400C75A24 /* SignInViewModelTests.swift */,
+				88D529BE25E4124400C75A24 /* LoyaltyAppIsolatedTests-Bridging-Header.h */,
+			);
+			path = SignIn;
 			sourceTree = "<group>";
 		};
 		88E6039525DEC2EA000CE124 /* Screens */ = {
@@ -273,6 +325,7 @@
 			isa = PBXGroup;
 			children = (
 				88F5DFB925E3E8C2001E7E4B /* Services.swift */,
+				88D529CB25E4127E00C75A24 /* Providers.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -328,6 +381,23 @@
 			productReference = 8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		88D529A325E411B000C75A24 /* LoyaltyAppIsolatedTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88D529A925E411B000C75A24 /* Build configuration list for PBXNativeTarget "LoyaltyAppIsolatedTests" */;
+			buildPhases = (
+				88D529A025E411B000C75A24 /* Sources */,
+				88D529A125E411B000C75A24 /* Frameworks */,
+				88D529A225E411B000C75A24 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LoyaltyAppIsolatedTests;
+			productName = LoyaltyAppIsolatedTests;
+			productReference = 88D529A425E411B000C75A24 /* LoyaltyAppIsolatedTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -341,6 +411,10 @@
 						CreatedOnToolsVersion = 12.4;
 					};
 					8895DF5025DEC84600E585C4 = {
+						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1240;
+					};
+					88D529A325E411B000C75A24 = {
 						CreatedOnToolsVersion = 12.4;
 						LastSwiftMigration = 1240;
 					};
@@ -361,6 +435,7 @@
 			targets = (
 				8827159D25DEA85400147F20 /* LoyaltyApp */,
 				8895DF5025DEC84600E585C4 /* LoyaltyAPIClient */,
+				88D529A325E411B000C75A24 /* LoyaltyAppIsolatedTests */,
 			);
 		};
 /* End PBXProject section */
@@ -388,6 +463,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		88D529A225E411B000C75A24 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -403,6 +485,7 @@
 				88F5DFBA25E3E8C2001E7E4B /* Services.swift in Sources */,
 				88E6039725DEC307000CE124 /* SignUpVC.swift in Sources */,
 				88E6039F25DEC360000CE124 /* InfosVC.swift in Sources */,
+				88D529CC25E4127E00C75A24 /* Providers.swift in Sources */,
 				8860549125E3F85C00B552FE /* SignInViewModel.swift in Sources */,
 				882715A425DEA85400147F20 /* SceneDelegate.swift in Sources */,
 				88E6039C25DEC32C000CE124 /* AddEditVC.swift in Sources */,
@@ -419,6 +502,16 @@
 				8895DF7425DECCF600E585C4 /* RequestOperation.swift in Sources */,
 				8895DF6325DEC88F00E585C4 /* Models.swift in Sources */,
 				8895DF7125DECC4E00E585C4 /* API.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88D529A025E411B000C75A24 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88D529C825E4126000C75A24 /* SignInViewModel.swift in Sources */,
+				88D529CF25E4128E00C75A24 /* Services.swift in Sources */,
+				88D529C025E4124400C75A24 /* SignInViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,6 +746,45 @@
 			};
 			name = Release;
 		};
+		88D529AA25E411B000C75A24 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LoyaltyAppIsolatedTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.yageek.LoyaltyAppIsolatedTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LoyaltyAppIsolatedTests/SignIn/LoyaltyAppIsolatedTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		88D529AB25E411B000C75A24 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LoyaltyAppIsolatedTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.yageek.LoyaltyAppIsolatedTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LoyaltyAppIsolatedTests/SignIn/LoyaltyAppIsolatedTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -679,6 +811,15 @@
 			buildConfigurations = (
 				8895DF5B25DEC84600E585C4 /* Debug */,
 				8895DF5C25DEC84600E585C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		88D529A925E411B000C75A24 /* Build configuration list for PBXNativeTarget "LoyaltyAppIsolatedTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88D529AA25E411B000C75A24 /* Debug */,
+				88D529AB25E411B000C75A24 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
