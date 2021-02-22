@@ -7,6 +7,10 @@
 
 import UIKit
 
+struct DI: HasAPIClientService {
+    let apiService: APIClientService = APIClientStub(allSuccess: true)
+}
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
@@ -18,7 +22,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: scene)
 
-        let root = UINavigationController(rootViewController: SignInVC())
+        let di = DI()
+        let root = UINavigationController(rootViewController: SignInVC(dependencies: di))
         window.rootViewController = root
         self.window = window
         window.makeKeyAndVisible()

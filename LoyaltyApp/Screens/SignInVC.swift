@@ -7,17 +7,37 @@
 
 import UIKit
 import LoyaltyAPIClient
+import RxSwift
+import RxCocoa
+
+protocol SignInVCDelegate: AnyObject {
+    func signInViewControllerDidSignInWithSuccess(_ controller: SignInVC)
+    func signInViewControllerDidFailedToSignIn(_ controller: SignInVC, credential:SignInVC.Credential, error: Error)
+}
 
 final class SignInVC: UIViewController {
 
+    typealias Dependencies = HasAPIClientService
+
+    struct Credential {
+        let email: String
+        let password: String
+    }
+
+    // MARK: - iVar | iVar
     @IBOutlet private(set) weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private(set) weak var passwordTextField: UITextField!
     @IBOutlet private(set) weak var emailTextField: UITextField!
     @IBOutlet private(set) weak var signInButton: UIButton!
 
+    private let dependencies: Dependencies
+    private let disposeBag = DisposeBag()
+
+    weak var delegate: SignInVCDelegate?
 
     // MARK: - Init
-    init() {
+    init(dependencies: Dependencies) {
+        self.dependencies = dependencies
         super.init(nibName: "SignInVC", bundle: nil)
     }
 
@@ -28,14 +48,6 @@ final class SignInVC: UIViewController {
     // MARK: - Action
     @IBAction func singInTriggered(_ sender: Any) {
         self.trySignIn()
-
-    }
-    @IBAction func unwindToSignInFromSignUp(sender: UIStoryboardSegue) {
-
-        if let signIn = sender.source as? SignUpVC {
-            self.emailTextField.text = signIn.emailTextField.text
-            self.passwordTextField.text = nil
-        }
     }
 
     // MARK: - Send
@@ -45,26 +57,37 @@ final class SignInVC: UIViewController {
         let pass = passwordTextField.text ?? ""
 
         self.activityIndicator.startAnimating()
-        LoyaltyAPIClient.shared.signIn(email: email, password: pass) { [weak self] (result) in
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
-
+        self.dependencies.apiService.rx_signIn(email: email, password: pass)
+            .delaySubscription(.milliseconds(800), scheduler: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] _ in
                 guard let self = self else { return }
-                self.activityIndicator.stopAnimating()
-                switch result {
-                case .failure(let error):
-                    print("SignUp: \(error)")
-                    self.performSegue(withIdentifier: "showSignUp", sender: self)
-                case .success(_):
-                    self.performSegue(withIdentifier: "showCardList", sender: self)
-                }
-            }
-        }
-    }
 
-    @IBAction func unwindFromUserInfoToSignIn(segue: UIStoryboardSegue ) {
+                self.delegate?.signInViewControllerDidSignInWithSuccess(self)
+            }, onFailure: { [weak self] (error) in
+                guard let self = self else { return }
+                let credential = Credential(email: email, password: pass)
+                self.delegate?.signInViewControllerDidFailedToSignIn(self, credential: credential, error: error)
 
+            }).disposed(by: self.disposeBag)
 
+// Combine version:
+//        self.dependencies.apiService.signIn(email: email, password: pass)
+//            .delay(for: .milliseconds(800), scheduler: DispatchQueue.main)
+//            .sink { [weak self] (completion) in
+//                guard let self = self else { return }
+//                let credential = Credential(email: email, password: pass)
+//                if case .failure(let error) = completion {
+//                    self.delegate?.signInViewControllerDidFailedToSignIn(self, credential: credential, error: error)
+//                }
+//
+//        } receiveValue: { [weak self] error in
+//            guard let self = self else { return }
+//
+//            self.delegate?.signInViewControllerDidSignInWithSuccess(self)
+//
+//        }.store(in: &self.disposeBag)
     }
 }
+
 
