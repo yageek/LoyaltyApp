@@ -22,6 +22,11 @@ final class SignInViewModel {
     // MARK: - DI
     private let dependencies: Dependencies
 
+    // MARK: - Inputs
+    let emailInput: BehaviorRelay<String?>
+    let passInput: BehaviorRelay<String?>
+    let buttonTriggered: PublishSubject<()>
+
     // MARK: - Output
     private var _isActivityIndicatorAnimating: BehaviorRelay<Bool>
     var isActivityIndicatorAnimating: Driver<Bool> { return self._isActivityIndicatorAnimating.asDriver() }
@@ -32,20 +37,17 @@ final class SignInViewModel {
     static let delayInterval: DispatchTimeInterval = .milliseconds(800)
     
     // MARK: - Init
-    init(dependencies: Dependencies, emailTextField: Observable<String?>, passwordTextField: Observable<String?>, buttonTriggered: Observable<()>) {
+    init(dependencies: Dependencies) {
         self.dependencies = dependencies
 
-        let emailRelay = BehaviorRelay<String?>(value: nil)
-        emailTextField.bind(to: emailRelay).disposed(by: self.disposeBag)
-
-        // Name filtering
-        let email = emailTextField.compactMap { $0 }
-        let password = passwordTextField.compactMap { $0 }
+        let email = BehaviorRelay<String?>(value: nil)
+        let pass = BehaviorRelay<String?>(value: nil)
+        let button = PublishSubject<()>()
 
         // Activity loading
         let isActivityIndicatorHidden = BehaviorRelay(value: false)
 
-        let displayed = Observable.combineLatest(email, password, buttonTriggered)
+        let displayed = Observable.combineLatest(email.compactMap { $0 }, pass.compactMap { $0 }, button)
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(true)
             })
@@ -54,11 +56,14 @@ final class SignInViewModel {
                 isActivityIndicatorHidden.accept(false)
             })
             .map{ Result<(), CredentialError>.success(()) }
-            .asSignal(onErrorRecover: { Signal.just(.failure(CredentialError(email: emailRelay.value ?? "", error: $0)))} )
+            .asSignal(onErrorRecover: { Signal.just(.failure(CredentialError(email: email.value ?? "", error: $0)))} )
 
 
         self._isActivityIndicatorAnimating = isActivityIndicatorHidden
         self.signInResult = displayed
-        self.inputEnabled = isActivityIndicatorHidden.map { !$0 }.asDriver(onErrorJustReturn: false)        
+        self.inputEnabled = isActivityIndicatorHidden.map { !$0 }.asDriver(onErrorJustReturn: false)
+        self.emailInput = email
+        self.passInput = pass
+        self.buttonTriggered = button
     }
 }

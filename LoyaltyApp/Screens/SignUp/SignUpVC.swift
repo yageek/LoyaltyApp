@@ -16,17 +16,14 @@ final class SignUpVC: UIViewController {
     @IBOutlet private(set) weak var emailTextField: UITextField!
     @IBOutlet private(set) weak var nameTextField: UITextField!
 
+
     // MARK: - Init
-    init() {
+    init(email: String?) {
         super.init(nibName: "SignUpVC", bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    @IBAction private func signupTriggered(_ sender: Any) {
-        self.trySignup()
     }
 
 

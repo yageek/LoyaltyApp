@@ -34,6 +34,7 @@ class SignInViewModelTests: XCTestCase {
     var testScheduler: TestScheduler!
     var subscription: Cancelable!
     override func setUpWithError() throws {
+        viewModel = SignInViewModel(dependencies: LongLoader(timeOut: .milliseconds(100)))
         testScheduler = TestScheduler(initialClock: 0)
     }
 
@@ -47,7 +48,6 @@ class SignInViewModelTests: XCTestCase {
 
         let disposeBag = DisposeBag()
 
-        let timeout: DispatchTimeInterval = .milliseconds(500)
 
         let email: TestableObservable<String?> = testScheduler.createHotObservable([.next(100, nil), .next(200, ""), .next(300, "Login")])
         let pass: TestableObservable<String?> = testScheduler.createHotObservable([.next(90, nil), .next(210, ""), .next(340, "Password")])
@@ -56,10 +56,16 @@ class SignInViewModelTests: XCTestCase {
         let inputEnabled = testScheduler.createObserver(Bool.self)
         let animating = testScheduler.createObserver(Bool.self)
 
+        let viewModel = self.viewModel!
         // Initialisation
         testScheduler.scheduleAt(0) {
-            // Subscription
-            let viewModel = SignInViewModel(dependencies: LongLoader(timeOut: timeout), emailTextField: email.asObservable(), passwordTextField: pass.asObservable(), buttonTriggered: button.asObservable())
+
+            // Bind inputs
+            email.bind(to: viewModel.emailInput).disposed(by: disposeBag)
+            pass.bind(to: viewModel.passInput).disposed(by: disposeBag)
+            button.bind(to: viewModel.buttonTriggered).disposed(by: disposeBag)
+
+            // Bind Outputs
             viewModel.inputEnabled.drive(inputEnabled).disposed(by: disposeBag)
             viewModel.isActivityIndicatorAnimating.drive(animating).disposed(by: disposeBag)
             viewModel.signInResult.emit(onNext: { _ in }, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
@@ -72,8 +78,5 @@ class SignInViewModelTests: XCTestCase {
 
         XCTAssertEqual([false, true], expectedAnimatingEvents)
         XCTAssertEqual([true, false], expectedInputEvents)
-        
     }
-
-
 }
