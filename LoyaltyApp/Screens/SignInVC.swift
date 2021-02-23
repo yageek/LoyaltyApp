@@ -16,15 +16,19 @@ protocol SignInVCDelegate: AnyObject {
 }
 
 final class SignInVC: UIViewController {
-    // MARK: - iVar | iVar
+    // MARK: - iVar | UIKit
     @IBOutlet private(set) weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private(set) weak var passwordTextField: UITextField!
     @IBOutlet private(set) weak var emailTextField: UITextField!
     @IBOutlet private(set) weak var signInButton: UIButton!
+
+    // MARK: - iVar | Rx
     private let disposeBag = DisposeBag()
+    private var viewModel: SignInViewModel?
+
+    // MARK: - iVar | API
     weak var delegate: SignInVCDelegate?
 
-    private var viewModel: SignInViewModel?
     // MARK: - Init
     init() {
         super.init(nibName: "SignInVC", bundle: nil)

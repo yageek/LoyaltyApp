@@ -23,6 +23,9 @@
 		8860548D25E3F4BC00B552FE /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548C25E3F4BC00B552FE /* RxRelay.xcframework */; };
 		8860548E25E3F4BC00B552FE /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548C25E3F4BC00B552FE /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8860549125E3F85C00B552FE /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8860549025E3F85C00B552FE /* SignInViewModel.swift */; };
+		8864D31A25E4F96C007C3FCE /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8864D31925E4F96C007C3FCE /* Coordinator.swift */; };
+		8864D32025E4FABC007C3FCE /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8864D31F25E4FABC007C3FCE /* RootCoordinator.swift */; };
+		8864D32425E4FC79007C3FCE /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8864D32325E4FC79007C3FCE /* SignUpViewModel.swift */; };
 		8895DF5525DEC84600E585C4 /* LoyaltyAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 8895DF5325DEC84600E585C4 /* LoyaltyAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8895DF5825DEC84600E585C4 /* LoyaltyAPIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */; };
 		8895DF5925DEC84600E585C4 /* LoyaltyAPIClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -99,6 +102,9 @@
 		8860548825E3F2B400B552FE /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = thirdParty/RxSwift.xcframework; sourceTree = "<group>"; };
 		8860548C25E3F4BC00B552FE /* RxRelay.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxRelay.xcframework; path = thirdParty/RxRelay.xcframework; sourceTree = "<group>"; };
 		8860549025E3F85C00B552FE /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		8864D31925E4F96C007C3FCE /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		8864D31F25E4FABC007C3FCE /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
+		8864D32325E4FC79007C3FCE /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 		8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LoyaltyAPIClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8895DF5325DEC84600E585C4 /* LoyaltyAPIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoyaltyAPIClient.h; sourceTree = "<group>"; };
 		8895DF5425DEC84600E585C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -187,6 +193,7 @@
 		882715A025DEA85400147F20 /* LoyaltyApp */ = {
 			isa = PBXGroup;
 			children = (
+				8864D31825E4F95D007C3FCE /* Coordinator */,
 				88E6039525DEC2EA000CE124 /* Screens */,
 				882715A125DEA85400147F20 /* AppDelegate.swift */,
 				882715A325DEA85400147F20 /* SceneDelegate.swift */,
@@ -220,6 +227,15 @@
 				8860548025E3F2AC00B552FE /* RxCocoaRuntime.xcframework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8864D31825E4F95D007C3FCE /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				8864D31925E4F96C007C3FCE /* Coordinator.swift */,
+				8864D31F25E4FABC007C3FCE /* RootCoordinator.swift */,
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 		8895DF5225DEC84600E585C4 /* LoyaltyAPIClient */ = {
@@ -299,6 +315,7 @@
 			children = (
 				88E6039625DEC307000CE124 /* SignUpVC.swift */,
 				88F5DF9E25E3C860001E7E4B /* SignUpVC.xib */,
+				8864D32325E4FC79007C3FCE /* SignUpViewModel.swift */,
 			);
 			path = SignUp;
 			sourceTree = "<group>";
@@ -479,9 +496,12 @@
 			files = (
 				882715A625DEA85400147F20 /* SignInVC.swift in Sources */,
 				882715A225DEA85400147F20 /* AppDelegate.swift in Sources */,
+				8864D31A25E4F96C007C3FCE /* Coordinator.swift in Sources */,
 				8828917B25DFB183008FE0AD /* Utils.swift in Sources */,
 				882715BD25DEBBB000147F20 /* CardCellView.swift in Sources */,
 				88E6039325DEC121000CE124 /* CardListVC.swift in Sources */,
+				8864D32025E4FABC007C3FCE /* RootCoordinator.swift in Sources */,
+				8864D32425E4FC79007C3FCE /* SignUpViewModel.swift in Sources */,
 				88F5DFBA25E3E8C2001E7E4B /* Services.swift in Sources */,
 				88E6039725DEC307000CE124 /* SignUpVC.swift in Sources */,
 				88E6039F25DEC360000CE124 /* InfosVC.swift in Sources */,

@@ -11,6 +11,7 @@ import RxSwift
 
 protocol APIClientService {
     func signIn(email: String, password: String) -> Single<()>
+    func signUp(name: String, email: String, password: String) -> Single<()>
     func signOut() -> Single<()>
 }
 
@@ -31,6 +32,14 @@ struct APIClientStub: APIClientService {
     }
 
     func signIn(email: String, password: String) -> Single<()> {
+        if allSuccess {
+            return Single.just(())
+        } else {
+            return Single.error(StubError())
+        }
+    }
+
+    func signUp(name: String, email: String, password: String) -> Single<()> {
         if allSuccess {
             return Single.just(())
         } else {

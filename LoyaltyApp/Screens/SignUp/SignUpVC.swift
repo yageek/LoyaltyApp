@@ -6,19 +6,34 @@
 //
 
 import UIKit
-import LoyaltyAPIClient
+import RxSwift
 
+protocol SignUpVCDelegate: AnyObject {
+    func signUpViewControllerDidLoginWithSuccess(_ controller: SignUpVC)
+    func signUpViewController(_ controller: SignUpVC, didFailedToSignUpWithError error: Error)
+}
 final class SignUpVC: UIViewController {
 
+    typealias Dependencies = HasAPIClientService
+
+    // MARK: - iVar | UIKit
     @IBOutlet private(set) weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private(set) weak var signUpButton: UIButton!
     @IBOutlet private(set) weak var passwordTextField: UITextField!
     @IBOutlet private(set) weak var emailTextField: UITextField!
     @IBOutlet private(set) weak var nameTextField: UITextField!
 
+    // MARK: - iVar | DI
+    private let dependencies: Dependencies
+    // MARK: - iVar | Rx
+    private let disposeBag = DisposeBag()
+    private var viewModel: SignUpViewModel?
+
+    weak var delegate: SignUpVCDelegate?
 
     // MARK: - Init
-    init(email: String?) {
+    init(dependencies: Dependencies, email: String?) {
+        self.dependencies = dependencies
         super.init(nibName: "SignUpVC", bundle: nil)
     }
     
@@ -26,34 +41,41 @@ final class SignUpVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - ViewLifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-    private func trySignup() {
+        let viewModel = SignUpViewModel(dependencies: DI())
 
+        // Binds Inputs
+        emailTextField.rx.text.bind(to: viewModel.emailInput).disposed(by: self.disposeBag)
+        passwordTextField.rx.text.bind(to: viewModel.passInput).disposed(by: self.disposeBag)
+        nameTextField.rx.text.bind(to: viewModel.nameInput).disposed(by: self.disposeBag)
+        signUpButton.rx.controlEvent(.touchUpInside).map { _ in () }.bind(to: viewModel.buttonTriggered).disposed(by: self.disposeBag)
 
-        let email = emailTextField.text ?? ""
-        let pass = passwordTextField.text ?? ""
-        let name = nameTextField.text ?? ""
+        // Binds Outputs
+        /// Binds Outputs
+        // Loading indicator
+        viewModel.isActivityIndicatorAnimating.drive(activityIndicator.rx.isAnimating).disposed(by: self.disposeBag)
 
-        guard !email.isEmpty && !pass.isEmpty && !name.isEmpty else {
-            self.presentAlertController(message: "Invalid inputs")
-            return
-        }
+        // Locking input
+        viewModel.inputEnabled.drive(passwordTextField.rx.isEnabled).disposed(by: self.disposeBag)
+        viewModel.inputEnabled.drive(emailTextField.rx.isEnabled).disposed(by: self.disposeBag)
+        viewModel.inputEnabled.drive(nameTextField.rx.isEnabled).disposed(by: self.disposeBag)
+        viewModel.inputEnabled.drive(signUpButton.rx.isEnabled).disposed(by: self.disposeBag)
 
-        self.activityIndicator.startAnimating()
-        LoyaltyAPIClient.shared.signUp(email: email, password: pass, name: name) { [weak self] (result) in
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
-
-                guard let self = self else { return }
-                self.activityIndicator.stopAnimating()
-
-                switch result {
-                case .failure(let error):
-                    self.presentAlertController(message: error.localizedDescription)
-                case .success(_):
-                    self.performSegue(withIdentifier: "unwindToSignIn", sender: self)
-                }
+        // Sign in result
+        viewModel.signInResult.emit(onNext: { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let credentialError):
+                self.delegate?.signUpViewController(self, didFailedToSignUpWithError: credentialError)
+            case .success(_):
+                self.delegate?.signUpViewControllerDidLoginWithSuccess(self)
             }
-        }
+        }).disposed(by: self.disposeBag)
+        self.viewModel = viewModel
+
+
     }
 }
