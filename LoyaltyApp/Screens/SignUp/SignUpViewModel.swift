@@ -44,13 +44,16 @@ final class SignUpViewModel {
         // Activity loading
         let isActivityIndicatorHidden = BehaviorRelay(value: false)
 
-        let displayed = Observable.combineLatest(email.compactMap { $0 }, pass.compactMap { $0 }, name.compactMap{ $0}, button)
+        let displayed = button.withLatestFrom(Observable.combineLatest(email.compactMap { $0 }, pass.compactMap { $0 }, name.compactMap{ $0 }))
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(true)
             })
-            .flatMap { dependencies.apiService.signUp(name: $0.2, email: $0.0, password: $0.1).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance) }
-            .map{ Result<(), Error>.success(()) }
-            .asSignal(onErrorRecover: { Signal.just(.failure( $0))} )
+            .flatMap {
+                dependencies.apiService.signUp(name: $0.2, email: $0.0, password: $0.1).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance)
+                    .map { Result<(), Error>.success(()) }
+                    .catch { .just(.failure($0)) }
+            }
+            .asSignal(onErrorRecover: { Signal.just(.failure( $0 ))} )
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(false)
             })

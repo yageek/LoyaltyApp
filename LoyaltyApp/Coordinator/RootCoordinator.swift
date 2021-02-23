@@ -36,11 +36,9 @@ extension RootCoordinator: SignInVCDelegate {
     }
 
     func signInViewControllerDidFailedToSignIn(_ controller: SignInVC, credential: String, error: Error) {
-
-        let signIN = SignInVC()
-        signIN.delegate = self
-        self.rootNavigationController.pushViewController(signIN, animated: true)
-        
+        let signUp = SignUpVC(email: credential)
+        signUp.delegate = self
+        controller.present(signUp, animated: true)
     }
 }
 
@@ -52,6 +50,6 @@ extension RootCoordinator: SignUpVCDelegate {
     }
 
     func signUpViewController(_ controller: SignUpVC, didFailedToSignUpWithError error: Error) {
-        self.rootNavigationController.presentAlertController(message: error.localizedDescription)
+        controller.presentAlertController(message: error.localizedDescription)
     }
 }

@@ -39,20 +39,28 @@ final class SignInViewModel {
     // MARK: - Init
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
+
+        // INputs
         let email = BehaviorRelay<String?>(value: nil)
         let pass = BehaviorRelay<String?>(value: nil)
         let button = PublishSubject<()>()
 
         // Activity loading
         let isActivityIndicatorHidden = BehaviorRelay(value: false)
-        
-        let displayed = Observable.combineLatest(email.compactMap { $0 }, pass.compactMap { $0 }, button)
+
+
+        // Validated inputs
+        let displayed = button.withLatestFrom(Observable.combineLatest(email.compactMap{ $0 }, pass.compactMap{ $0 }))
+            .debug()
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(true)
             })
-            .flatMap { dependencies.apiService.signIn(email: $0.0, password: $0.1).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance) }
-            .map{ Result<(), CredentialError>.success(()) }
-            .asSignal(onErrorRecover: { Signal.just(.failure(CredentialError(email: email.value ?? "", error: $0)))} )
+            .flatMap {
+                dependencies.apiService.signIn(email: $0.0, password: $0.1).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance)
+                .map { Result<(), CredentialError>.success(()) }
+                .catch { .just(.failure(CredentialError(email: email.value ?? "", error: $0 )))}
+            }
+            .asSignal(onErrorRecover: { .just(.failure(CredentialError(email: email.value ?? "", error: $0)))} )
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(false)
             })

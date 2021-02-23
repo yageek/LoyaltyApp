@@ -23,8 +23,7 @@ final class SignUpVC: UIViewController {
     @IBOutlet private(set) weak var emailTextField: UITextField!
     @IBOutlet private(set) weak var nameTextField: UITextField!
 
-    // MARK: - iVar | DI
-    private let dependencies: Dependencies
+
     // MARK: - iVar | Rx
     private let disposeBag = DisposeBag()
     private var viewModel: SignUpViewModel?
@@ -32,8 +31,7 @@ final class SignUpVC: UIViewController {
     weak var delegate: SignUpVCDelegate?
 
     // MARK: - Init
-    init(dependencies: Dependencies, email: String?) {
-        self.dependencies = dependencies
+    init(email: String?) {
         super.init(nibName: "SignUpVC", bundle: nil)
     }
     
