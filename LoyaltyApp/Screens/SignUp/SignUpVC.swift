@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 
 protocol SignUpVCDelegate: AnyObject {
-    func signUpViewControllerDidLoginWithSuccess(_ controller: SignUpVC)
+    func signUpViewControllerDidSignUpWithSuccess(_ controller: SignUpVC)
     func signUpViewController(_ controller: SignUpVC, didFailedToSignUpWithError error: Error)
 }
 final class SignUpVC: UIViewController {
@@ -69,7 +69,7 @@ final class SignUpVC: UIViewController {
             case .failure(let credentialError):
                 self.delegate?.signUpViewController(self, didFailedToSignUpWithError: credentialError)
             case .success(_):
-                self.delegate?.signUpViewControllerDidLoginWithSuccess(self)
+                self.delegate?.signUpViewControllerDidSignUpWithSuccess(self)
             }
         }).disposed(by: self.disposeBag)
         self.viewModel = viewModel

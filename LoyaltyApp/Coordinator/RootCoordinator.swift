@@ -32,7 +32,10 @@ final class RootCoordinator: BaseCoordinator {
 // MARK: - SignInVCDelegate
 extension RootCoordinator: SignInVCDelegate {
     func signInViewControllerDidSignInWithSuccess(_ controller: SignInVC) {
-
+        let listCoordinator = ListCoordinator(navigationController: self.rootNavigationController)
+        self.addChild(listCoordinator)
+        listCoordinator.delegate = self
+        listCoordinator.start()
     }
 
     func signInViewControllerDidFailedToSignIn(_ controller: SignInVC, credential: String, error: Error) {
@@ -45,11 +48,18 @@ extension RootCoordinator: SignInVCDelegate {
 
 // MARK: - SignUpVCDelegate
 extension RootCoordinator: SignUpVCDelegate {
-    func signUpViewControllerDidLoginWithSuccess(_ controller: SignUpVC) {
-        // TODO: Move to list
+    func signUpViewControllerDidSignUpWithSuccess(_ controller: SignUpVC) {
+
+
     }
 
     func signUpViewController(_ controller: SignUpVC, didFailedToSignUpWithError error: Error) {
         controller.presentAlertController(message: error.localizedDescription)
+    }
+}
+
+extension RootCoordinator: ListCoordinatorDelegate {
+    func listCoordinatorDidTerminate(_ coordinator: ListCoordinator) {
+        self.removeChild(coordinator)
     }
 }

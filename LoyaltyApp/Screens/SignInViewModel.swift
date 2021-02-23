@@ -49,6 +49,12 @@ final class SignInViewModel {
         let isActivityIndicatorHidden = BehaviorRelay(value: false)
 
 
+        let subject = PublishSubject<String>()
+        let observer = Observable<String>.from(["Hello world", "Other"])
+        observer.bind(to: subject).disposed(by: self.disposeBag)
+
+
+
         // Validated inputs
         let displayed = button.withLatestFrom(Observable.combineLatest(email.compactMap{ $0 }, pass.compactMap{ $0 }))
             .debug()

@@ -23,6 +23,10 @@ struct LongLoader: APIClientService {
     func signOut() -> Single<()> {
         return .just(())
     }
+
+    func signUp(name: String, email: String, password: String) -> Single<()> {
+        return .just(())
+    }
 }
 
 extension LongLoader: HasAPIClientService {

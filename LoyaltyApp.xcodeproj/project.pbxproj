@@ -26,6 +26,9 @@
 		8864D31A25E4F96C007C3FCE /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8864D31925E4F96C007C3FCE /* Coordinator.swift */; };
 		8864D32025E4FABC007C3FCE /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8864D31F25E4FABC007C3FCE /* RootCoordinator.swift */; };
 		8864D32425E4FC79007C3FCE /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8864D32325E4FC79007C3FCE /* SignUpViewModel.swift */; };
+		8864D33425E51C4D007C3FCE /* CardListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8864D33325E51C4D007C3FCE /* CardListCellViewModel.swift */; };
+		8864D33825E51FC7007C3FCE /* ListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8864D33725E51FC7007C3FCE /* ListCoordinator.swift */; };
+		8864D33C25E5217A007C3FCE /* CardListVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8864D33B25E5217A007C3FCE /* CardListVC.xib */; };
 		8895DF5525DEC84600E585C4 /* LoyaltyAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 8895DF5325DEC84600E585C4 /* LoyaltyAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8895DF5825DEC84600E585C4 /* LoyaltyAPIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */; };
 		8895DF5925DEC84600E585C4 /* LoyaltyAPIClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -105,6 +108,9 @@
 		8864D31925E4F96C007C3FCE /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		8864D31F25E4FABC007C3FCE /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
 		8864D32325E4FC79007C3FCE /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
+		8864D33325E51C4D007C3FCE /* CardListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListCellViewModel.swift; sourceTree = "<group>"; };
+		8864D33725E51FC7007C3FCE /* ListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCoordinator.swift; sourceTree = "<group>"; };
+		8864D33B25E5217A007C3FCE /* CardListVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CardListVC.xib; sourceTree = "<group>"; };
 		8895DF5125DEC84600E585C4 /* LoyaltyAPIClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LoyaltyAPIClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8895DF5325DEC84600E585C4 /* LoyaltyAPIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoyaltyAPIClient.h; sourceTree = "<group>"; };
 		8895DF5425DEC84600E585C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -210,8 +216,10 @@
 			children = (
 				882715BC25DEBBB000147F20 /* CardCellView.swift */,
 				88E6039225DEC121000CE124 /* CardListVC.swift */,
+				8864D33B25E5217A007C3FCE /* CardListVC.xib */,
 				88F5DFA525E3CAF6001E7E4B /* CardCellView.xib */,
 				88F5DFA825E3CB03001E7E4B /* LoadingCellView.xib */,
+				8864D33325E51C4D007C3FCE /* CardListCellViewModel.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -234,6 +242,7 @@
 			children = (
 				8864D31925E4F96C007C3FCE /* Coordinator.swift */,
 				8864D31F25E4FABC007C3FCE /* RootCoordinator.swift */,
+				8864D33725E51FC7007C3FCE /* ListCoordinator.swift */,
 			);
 			path = Coordinator;
 			sourceTree = "<group>";
@@ -466,6 +475,7 @@
 				882715AB25DEA85500147F20 /* Assets.xcassets in Resources */,
 				88F5DF9F25E3C860001E7E4B /* SignUpVC.xib in Resources */,
 				88F5DF9A25E3C7A0001E7E4B /* SignInVC.xib in Resources */,
+				8864D33C25E5217A007C3FCE /* CardListVC.xib in Resources */,
 				88F5DFAF25E3CBBF001E7E4B /* InfosVC.xib in Resources */,
 				88F5DFA625E3CAF6001E7E4B /* CardCellView.xib in Resources */,
 				88F5DFA925E3CB03001E7E4B /* LoadingCellView.xib in Resources */,
@@ -502,9 +512,11 @@
 				88E6039325DEC121000CE124 /* CardListVC.swift in Sources */,
 				8864D32025E4FABC007C3FCE /* RootCoordinator.swift in Sources */,
 				8864D32425E4FC79007C3FCE /* SignUpViewModel.swift in Sources */,
+				8864D33425E51C4D007C3FCE /* CardListCellViewModel.swift in Sources */,
 				88F5DFBA25E3E8C2001E7E4B /* Services.swift in Sources */,
 				88E6039725DEC307000CE124 /* SignUpVC.swift in Sources */,
 				88E6039F25DEC360000CE124 /* InfosVC.swift in Sources */,
+				8864D33825E51FC7007C3FCE /* ListCoordinator.swift in Sources */,
 				88D529CC25E4127E00C75A24 /* Providers.swift in Sources */,
 				8860549125E3F85C00B552FE /* SignInViewModel.swift in Sources */,
 				882715A425DEA85400147F20 /* SceneDelegate.swift in Sources */,

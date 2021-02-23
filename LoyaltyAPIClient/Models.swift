@@ -31,6 +31,13 @@ struct CardData: Encodable {
 
 // MARK: - CardResource
 public struct CardResource: Decodable, Hashable {
+    public init(id: Int, name: String, code: String, color: String?) {
+        self.id = id
+        self.name = name
+        self.code = code
+        self.color = color
+    }
+
     public let id: Int
     public let name, code: String
     public let color: String?
@@ -38,6 +45,11 @@ public struct CardResource: Decodable, Hashable {
 
 // MARK: - CardResource
 public struct CardPageResponse: Decodable {
+    public init(count: Int, cards: [CardResource]) {
+        self.count = count
+        self.cards = cards
+    }
+
     public let count: Int
     public let cards: [CardResource]
 }
