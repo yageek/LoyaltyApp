@@ -26,7 +26,7 @@ final class SignInViewModel {
     private var _isActivityIndicatorAnimating: BehaviorRelay<Bool>
     var isActivityIndicatorAnimating: Driver<Bool> { return self._isActivityIndicatorAnimating.asDriver() }
 
-    let signInResult: Driver<Result<(), CredentialError>>
+    let signInResult: Signal<Result<(), CredentialError>>
     var inputEnabled: Driver<Bool>
 
     static let delayInterval: DispatchTimeInterval = .milliseconds(800)
@@ -50,17 +50,15 @@ final class SignInViewModel {
                 isActivityIndicatorHidden.accept(true)
             })
             .flatMap { dependencies.apiService.signIn(email: $0.0, password: $0.1).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance) }
-
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(false)
             })
             .map{ Result<(), CredentialError>.success(()) }
-            .asDriver(onErrorRecover: { Driver.just(.failure(CredentialError(email: emailRelay.value ?? "", error: $0)))} )
+            .asSignal(onErrorRecover: { Signal.just(.failure(CredentialError(email: emailRelay.value ?? "", error: $0)))} )
 
 
         self._isActivityIndicatorAnimating = isActivityIndicatorHidden
         self.signInResult = displayed
-        self.inputEnabled = isActivityIndicatorHidden.asDriver().map { !$0 }
-
+        self.inputEnabled = isActivityIndicatorHidden.map { !$0 }.asDriver(onErrorJustReturn: false)        
     }
 }
