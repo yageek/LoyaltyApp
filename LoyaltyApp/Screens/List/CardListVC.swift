@@ -42,6 +42,7 @@ final class CardListVC: UICollectionViewController {
         super.viewDidLoad()
 
         // Bindings
+        // Outputs from VC
         let viewModel = CardListCellViewModel(dependencies: DI())
         let dataSource = UICollectionViewDiffableDataSource<CardListCellViewModel.Section, CardListCellViewModel.Cell>(collectionView: self.collectionView) { (collectionView, indexPath, element) -> UICollectionViewCell? in
             switch  element {
@@ -59,6 +60,17 @@ final class CardListVC: UICollectionViewController {
         viewModel.changes.subscribe(onNext: { (patch) in
             dataSource.apply(patch)
         }).disposed(by: self.disposeBag)
+
+
+        // Inputs from VC
+        self.collectionView.rx.willDisplayCell.filter { (elm) -> Bool in
+            let elements = dataSource.itemIdentifier(for: elm.at)
+            if case .loading = elements {
+                return true
+            }
+            return false
+        }.map { _ in () }.bind(to: viewModel.loadNextPageTrigger).disposed(by: self.disposeBag)
+
         self.viewModel = viewModel
     }
 }

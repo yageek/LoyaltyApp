@@ -24,53 +24,56 @@ final class CardListCellViewModel {
     }
 
     // MARK: - Var
-
     typealias Dependencies = HasAPIClientService
-    private var currentOffset: UInt?
+
+    // MARK: - iVar | State
+    private var currentOffset: BehaviorRelay<UInt?>
     private var totalCount: Int?
+    private var elements: BehaviorRelay<[CardResource]>
 
-    private var elements: [CardResource] = []
+    // MARK: iVar | Inputs
+    let loadNextPageTrigger: BehaviorSubject<()>
 
-    private var _changes: BehaviorRelay<NSDiffableDataSourceSnapshot<Section, Cell>> = BehaviorRelay(value: NSDiffableDataSourceSnapshot())
-    var changes: Observable<NSDiffableDataSourceSnapshot<Section, Cell>> { return _changes.asObservable() }
+    // MARK: iVar | Outputs
+//    private var _changes: BehaviorRelay<NSDiffableDataSourceSnapshot<Section, Cell>> = BehaviorRelay(value: NSDiffableDataSourceSnapshot())
+    var changes: Observable<NSDiffableDataSourceSnapshot<Section, Cell>>
+
+    // MARK: - iVar | DI
     let dependencies: Dependencies
 
     init(dependencies: Dependencies) {
-        self.dependencies = dependencies
 
-        loadNextPage()
-    }
-
-    // MARK: - Loading
-
-    private func loadNextPage() {
-
-        if let totalCount = self.totalCount, self.elements.count >= totalCount { return }
-
-        let requestOffset: UInt
-        if let current = self.currentOffset {
-            requestOffset = current + 1
-        } else {
-            requestOffset = 0
-        }
+        // We load the first page immediatly
 
         let pageSize: UInt = 10
-        self.dependencies.apiService.getAllLoyalties(offset: requestOffset*pageSize, limit: pageSize).subscribe(onSuccess: { [weak self] page in
-            guard let self = self else { return }
 
+        let loadNextPageTrigger = BehaviorSubject<()>(value: ())
+        let offset = BehaviorRelay<UInt?>(value: nil)
+        let elements = BehaviorRelay<[CardResource]>(value: [])
 
-//                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
-//                    self?.presentAlertController(message: error.localizedDescription)
-//                }
+        // Map offset
+        let mappedOffset = offset.map({ offset -> UInt in
+            if let offset = offset {
+                return offset + 1
+            } else {
+                return 0
+            }
+        })
 
-
-
-                if self.totalCount == nil {
-                    self.totalCount = page.count
+        let changes = loadNextPageTrigger
+            .withLatestFrom(mappedOffset)
+            .flatMap { dependencies.apiService.getAllLoyalties(offset: $0*pageSize, limit: pageSize) }
+            .do(onNext: { (arg) in
+                if let value = offset.value {
+                    offset.accept(value + 1)
+                } else {
+                    offset.accept(0)
                 }
-                // Memorize before
+            })
+            .map { (page) -> (NSDiffableDataSourceSnapshot<Section, Cell>, [CardResource]) in
+//                let (page, elements, _) = arg
 
-                var newContents = self.elements
+                var newContents = elements.value
                 newContents.append(contentsOf: page.cards)
 
                 let contentSize = newContents.count
@@ -83,22 +86,17 @@ final class CardListCellViewModel {
                 if contentSize < page.count {
                     patch.appendItems([.loading])
                 }
+                return (patch, newContents)
+            }
+            .do(onNext: {(arg) in
+                elements.accept(arg.1)
+            })
 
-                self.currentOffset = requestOffset
-                self.elements = newContents
-                self._changes.accept(patch)
-        }).disposed(by: self.disposeBag)
-    }
-
-    private func resetData() {
-        self.elements.removeAll()
-        self.currentOffset = nil
-        self.totalCount = nil
-
-        let patch = NSDiffableDataSourceSnapshot<Section, Cell>()
-        self._changes.accept(patch)
-
-        loadNextPage()
+        self.changes = changes.map { $0.0 }
+        self.elements = elements
+        self.currentOffset = offset
+        self.dependencies = dependencies
+        self.loadNextPageTrigger = loadNextPageTrigger
 
     }
 }

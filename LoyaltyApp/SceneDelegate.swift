@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import LoyaltyAPIClient
 
 struct DI: HasAPIClientService {
-    let apiService: APIClientService = APIClientStub(allSuccess: true)
+    let apiService: APIClientService = LoyaltyAPIClient.shared
 }
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
