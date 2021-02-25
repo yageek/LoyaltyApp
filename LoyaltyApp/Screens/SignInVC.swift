@@ -16,15 +16,19 @@ protocol SignInVCDelegate: AnyObject {
 }
 
 final class SignInVC: UIViewController {
-    // MARK: - iVar | iVar
+    // MARK: - iVar | UIKit
     @IBOutlet private(set) weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private(set) weak var passwordTextField: UITextField!
     @IBOutlet private(set) weak var emailTextField: UITextField!
     @IBOutlet private(set) weak var signInButton: UIButton!
+
+    // MARK: - iVar | Rx
     private let disposeBag = DisposeBag()
+    private var viewModel: SignInViewModel?
+
+    // MARK: - iVar | API
     weak var delegate: SignInVCDelegate?
 
-    private var viewModel: SignInViewModel?
     // MARK: - Init
     init() {
         super.init(nibName: "SignInVC", bundle: nil)
@@ -38,9 +42,14 @@ final class SignInVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let viewModel = SignInViewModel(dependencies: DI())
 
-        let viewModel = SignInViewModel(dependencies: DI(), emailTextField: self.emailTextField.rx.text.asObservable(), passwordTextField: self.passwordTextField.rx.text.asObservable(), buttonTriggered:  self.signInButton.rx.controlEvent(.touchUpInside).asObservable())
+        /// Binds Inputs
+        self.emailTextField.rx.text.bind(to: viewModel.emailInput).disposed(by: self.disposeBag)
+        self.passwordTextField.rx.text.bind(to: viewModel.passInput).disposed(by: self.disposeBag)
+        self.signInButton.rx.controlEvent(.touchUpInside).bind(to: viewModel.buttonTriggered).disposed(by: self.disposeBag)
 
+        /// Binds Outputs
         // Loading indicator
         viewModel.isActivityIndicatorAnimating.drive(activityIndicator.rx.isAnimating).disposed(by: self.disposeBag)
 
@@ -50,7 +59,7 @@ final class SignInVC: UIViewController {
         viewModel.inputEnabled.drive(signInButton.rx.isEnabled).disposed(by: self.disposeBag)
 
         // Sign in result
-        viewModel.signInResult.drive(onNext: { [weak self] (result) in
+        viewModel.signInResult.emit(onNext: { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .failure(let credentialError):

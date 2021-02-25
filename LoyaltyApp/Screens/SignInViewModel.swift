@@ -17,48 +17,58 @@ final class SignInViewModel {
     }
     typealias Dependencies = HasAPIClientService
 
-    // MARK: - iVar
+    // MARK: - iVar | Rx
     private let disposeBag = DisposeBag()
-    // MARK: - DI
+    // MARK: - iVar | DI
     private let dependencies: Dependencies
 
-    // MARK: - Output
+    // MARK: - iVar | Inputs
+    let emailInput: BehaviorRelay<String?>
+    let passInput: BehaviorRelay<String?>
+    let buttonTriggered: PublishSubject<()>
+
+    // MARK: - iVar | Outputs
     private var _isActivityIndicatorAnimating: BehaviorRelay<Bool>
     var isActivityIndicatorAnimating: Driver<Bool> { return self._isActivityIndicatorAnimating.asDriver() }
 
-    let signInResult: Driver<Result<(), CredentialError>>
+    let signInResult: Signal<Result<(), CredentialError>>
     var inputEnabled: Driver<Bool>
 
+    static let delayInterval: DispatchTimeInterval = .milliseconds(800)
+
     // MARK: - Init
-    init(dependencies: Dependencies, emailTextField: Observable<String?>, passwordTextField: Observable<String?>, buttonTriggered: Observable<()>) {
+    init(dependencies: Dependencies) {
         self.dependencies = dependencies
 
-        let emailRelay = BehaviorRelay<String?>(value: nil)
-        emailTextField.bind(to: emailRelay).disposed(by: self.disposeBag)
-
-        // Name filtering
-        let email = emailTextField.compactMap { $0 }
-        let password = passwordTextField.compactMap { $0 }
+        // INputs
+        let email = BehaviorRelay<String?>(value: nil)
+        let pass = BehaviorRelay<String?>(value: nil)
+        let button = PublishSubject<()>()
 
         // Activity loading
         let isActivityIndicatorHidden = BehaviorRelay(value: false)
 
-        let displayed = Observable.combineLatest(email, password, buttonTriggered)
+        // Validated inputs
+        let displayed = button.withLatestFrom(Observable.combineLatest(email.compactMap{ $0 }, pass.compactMap{ $0 }))
+            .debug()
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(true)
             })
-            .flatMap { dependencies.apiService.rx_signIn(email: $0.0, password: $0.1).delaySubscription(.seconds(3), scheduler: MainScheduler.instance) }
-
+            .flatMap {
+                dependencies.apiService.signIn(email: $0.0, password: $0.1).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance)
+                .map { Result<(), CredentialError>.success(()) }
+                .catch { .just(.failure(CredentialError(email: email.value ?? "", error: $0 )))}
+            }
+            .asSignal(onErrorRecover: { .just(.failure(CredentialError(email: email.value ?? "", error: $0)))} )
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(false)
             })
-            .map{ Result<(), CredentialError>.success(()) }
-            .asDriver(onErrorRecover: { Driver.just(.failure(CredentialError(email: emailRelay.value ?? "", error: $0)))} )
-
 
         self._isActivityIndicatorAnimating = isActivityIndicatorHidden
         self.signInResult = displayed
-        self.inputEnabled = isActivityIndicatorHidden.asDriver().map { !$0 }
-
+        self.inputEnabled = isActivityIndicatorHidden.map { !$0 }.asDriver(onErrorJustReturn: false)
+        self.emailInput = email
+        self.passInput = pass
+        self.buttonTriggered = button
     }
 }

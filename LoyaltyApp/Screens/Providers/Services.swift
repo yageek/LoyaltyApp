@@ -7,17 +7,14 @@
 
 import Foundation
 import Combine
-import LoyaltyAPIClient
 import RxSwift
+import LoyaltyAPIClient
 
-protocol APIClientService: RxAPIClientService {
-    func signIn(email: String, password: String) -> Future<(), Swift.Error>
-    func signOut() -> Future<(), Error>
-}
-
-protocol RxAPIClientService {
-    func rx_signIn(email: String, password: String) -> Single<()>
-    func rx_signOut() -> Single<()>
+protocol APIClientService {
+    func signIn(email: String, password: String) -> Single<()>
+    func signUp(name: String, email: String, password: String) -> Single<()>
+    func signOut() -> Single<()>
+    func getAllLoyalties(offset: UInt, limit: UInt) -> Single<CardPageResponse>
 }
 
 protocol HasAPIClientService {
@@ -25,31 +22,14 @@ protocol HasAPIClientService {
 }
 
 // MARK: - Extension
-struct APIClientStub: APIClientService, RxAPIClientService {
+struct APIClientStub: APIClientService {
+    func getAllLoyalties(offset: UInt, limit: UInt) -> Single<CardPageResponse> {
+        return .just(CardPageResponse(count: 20, cards: [CardResource(id: 0, name: "TEst", code: "1234", color: nil)]))
+    }
+
     private struct StubError: Error { }
-
-    func signIn(email: String, password: String) -> Future<(), Error> {
-            return Future { (obs) in
-                if allSuccess {
-                    obs(.success(()))
-                } else {
-                    obs(.failure(StubError()))
-                }
-            }
-    }
-
     let allSuccess: Bool
-    func signOut() -> Future<(), Error> {
-        return Future { (obs) in
-            if allSuccess {
-                obs(.success(()))
-            } else {
-                obs(.failure(StubError()))
-            }
-        }
-    }
-
-    func rx_signOut() -> Single<()> {
+    func signOut() -> Single<()> {
         if allSuccess {
             return Single.just(())
         } else {
@@ -57,7 +37,15 @@ struct APIClientStub: APIClientService, RxAPIClientService {
         }
     }
 
-    func rx_signIn(email: String, password: String) -> Single<()> {
+    func signIn(email: String, password: String) -> Single<()> {
+        if allSuccess {
+            return Single.just(())
+        } else {
+            return Single.error(StubError())
+        }
+    }
+
+    func signUp(name: String, email: String, password: String) -> Single<()> {
         if allSuccess {
             return Single.just(())
         } else {
