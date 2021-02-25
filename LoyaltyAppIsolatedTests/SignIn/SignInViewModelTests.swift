@@ -15,12 +15,16 @@ struct LongLoader: APIClientService {
     let timeOut: DispatchTimeInterval
 
     private let scheduler = ConcurrentDispatchQueueScheduler(queue:
-    DispatchQueue.global())
+    .global())
     func signIn(email: String, password: String) -> Single<()> {
         return Single.just(()).delay(timeOut, scheduler: scheduler)
     }
 
     func signOut() -> Single<()> {
+        return .just(())
+    }
+
+    func signUp(name: String, email: String, password: String) -> Single<()> {
         return .just(())
     }
 }
@@ -49,11 +53,14 @@ class SignInViewModelTests: XCTestCase {
     }
 
     func testLockingInterface() throws {
-
-        let timeout: DispatchTimeInterval = .milliseconds(500)
+        let disposeBag = DisposeBag()
 
         // Initialisation
-        let viewModel = SignInViewModel(dependencies: LongLoader(timeOut: timeout), emailTextField: emailInput.asObservable(), passwordTextField: passInput.asObservable(), buttonTriggered: publishSub)
+        let viewModel = SignInViewModel(dependencies: LongLoader(timeOut: .milliseconds(100)))
+
+        emailInput.bind(to: viewModel.emailInput).disposed(by: disposeBag)
+        passInput.bind(to: viewModel.passInput).disposed(by: disposeBag)
+        publishSub.bind(to: viewModel.buttonTriggered).disposed(by: disposeBag)
 
         // Initialisation
         XCTAssertTrue(try viewModel.inputEnabled.toBlocking().first()!)
