@@ -15,7 +15,7 @@ protocol SignInVCDelegate: AnyObject {
     func signInViewControllerDidFailedToSignIn(_ controller: SignInVC, credential: String, error: Error)
 }
 
-final class SignInVC: UIViewController {
+final class SignInVC: UIViewController, Bindable {
     // MARK: - iVar | UIKit
     @IBOutlet private(set) weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private(set) weak var passwordTextField: UITextField!
@@ -43,23 +43,26 @@ final class SignInVC: UIViewController {
         super.viewDidLoad()
 
         let viewModel = SignInViewModel(dependencies: DI())
+        self.bind(to: viewModel)
+    }
 
+    func bind(to viewModel: SignInViewModel) {
         /// Binds Inputs
-        self.emailTextField.rx.text.bind(to: viewModel.emailInput).disposed(by: self.disposeBag)
-        self.passwordTextField.rx.text.bind(to: viewModel.passInput).disposed(by: self.disposeBag)
-        self.signInButton.rx.controlEvent(.touchUpInside).bind(to: viewModel.buttonTriggered).disposed(by: self.disposeBag)
+        self.emailTextField.rx.text.bind(to: viewModel.input.emailInput).disposed(by: self.disposeBag)
+        self.passwordTextField.rx.text.bind(to: viewModel.input.passInput).disposed(by: self.disposeBag)
+        self.signInButton.rx.controlEvent(.touchUpInside).bind(to: viewModel.input.buttonTriggered).disposed(by: self.disposeBag)
 
         /// Binds Outputs
         // Loading indicator
-        viewModel.isActivityIndicatorAnimating.drive(activityIndicator.rx.isAnimating).disposed(by: self.disposeBag)
+        viewModel.output.isActivityIndicatorAnimating.drive(activityIndicator.rx.isAnimating).disposed(by: self.disposeBag)
 
         // Locking input
-        viewModel.inputEnabled.drive(passwordTextField.rx.isEnabled).disposed(by: self.disposeBag)
-        viewModel.inputEnabled.drive(emailTextField.rx.isEnabled).disposed(by: self.disposeBag)
-        viewModel.inputEnabled.drive(signInButton.rx.isEnabled).disposed(by: self.disposeBag)
+        viewModel.output.inputEnabled.drive(passwordTextField.rx.isEnabled).disposed(by: self.disposeBag)
+        viewModel.output.inputEnabled.drive(emailTextField.rx.isEnabled).disposed(by: self.disposeBag)
+        viewModel.output.inputEnabled.drive(signInButton.rx.isEnabled).disposed(by: self.disposeBag)
 
         // Sign in result
-        viewModel.signInResult.emit(onNext: { [weak self] (result) in
+        viewModel.output.signInResult.subscribe(onNext: { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .failure(let credentialError):

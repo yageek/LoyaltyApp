@@ -10,29 +10,36 @@ import RxSwift
 import RxRelay
 import RxCocoa
 
-final class SignInViewModel {
+final class SignInViewModel: ViewModel {
     struct CredentialError: Error {
         let email: String
         let error: Error
     }
-    typealias Dependencies = HasAPIClientService
+
+    typealias SignInResult = Result<(), CredentialError>
 
     // MARK: - iVar | Rx
+    struct Input {
+        let emailInput: AnyObserver<String?>
+        let passInput: AnyObserver<String?>
+        let buttonTriggered: AnyObserver<()>
+    }
+    let input: Input
+
+    struct Output {
+        let isActivityIndicatorAnimating: Driver<Bool>
+        let inputEnabled: Driver<Bool>
+        let signInResult: Observable<SignInResult>
+    }
+
+    let output: Output
+
     private let disposeBag = DisposeBag()
+
     // MARK: - iVar | DI
+    typealias Dependencies = HasAPIClientService
+
     private let dependencies: Dependencies
-
-    // MARK: - iVar | Inputs
-    let emailInput: BehaviorRelay<String?>
-    let passInput: BehaviorRelay<String?>
-    let buttonTriggered: PublishSubject<()>
-
-    // MARK: - iVar | Outputs
-    private var _isActivityIndicatorAnimating: BehaviorRelay<Bool>
-    var isActivityIndicatorAnimating: Driver<Bool> { return self._isActivityIndicatorAnimating.asDriver() }
-
-    let signInResult: Signal<Result<(), CredentialError>>
-    var inputEnabled: Driver<Bool>
 
     static let delayInterval: DispatchTimeInterval = .milliseconds(800)
     
@@ -40,36 +47,36 @@ final class SignInViewModel {
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
 
-        // INputs
-        let email = BehaviorRelay<String?>(value: nil)
-        let pass = BehaviorRelay<String?>(value: nil)
+        // Inputs
+        let email = BehaviorSubject<String?>(value: nil)
+        let pass = BehaviorSubject<String?>(value: nil)
         let button = PublishSubject<()>()
-
         // Activity loading
         let isActivityIndicatorHidden = BehaviorRelay(value: false)
 
+        let inputEnabled = isActivityIndicatorHidden.map { !$0 }.asDriver(onErrorDriveWith: .empty())
 
         // Validated inputs
-        let displayed = button.withLatestFrom(Observable.combineLatest(email.compactMap{ $0 }, pass.compactMap{ $0 }))
-            .debug()
+        let signInResult = button.withLatestFrom(Observable.combineLatest(email.compactMap{ $0 }, pass.compactMap{ $0 }))
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(true)
             })
             .flatMap {
-                dependencies.apiService.signIn(email: $0.0, password: $0.1).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance)
+                dependencies.apiService.signIn(email: $0.0, password: $0.1)
+                    .delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance)
                 .map { Result<(), CredentialError>.success(()) }
-                .catch { .just(.failure(CredentialError(email: email.value ?? "", error: $0 )))}
+                .catch { .just(.failure(CredentialError(email: (try? email.value()) ?? "", error: $0 )))}
             }
-            .asSignal(onErrorRecover: { .just(.failure(CredentialError(email: email.value ?? "", error: $0)))} )
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(false)
-            })
+            }).asObservable()
 
-        self._isActivityIndicatorAnimating = isActivityIndicatorHidden
-        self.signInResult = displayed
-        self.inputEnabled = isActivityIndicatorHidden.map { !$0 }.asDriver(onErrorJustReturn: false)
-        self.emailInput = email
-        self.passInput = pass
-        self.buttonTriggered = button
+        // Assignement
+        self.input = Input(emailInput: email.asObserver(),
+                           passInput: pass.asObserver(),
+                           buttonTriggered: button.asObserver())
+
+        self.output = Output(isActivityIndicatorAnimating: isActivityIndicatorHidden.asDriver(),
+                             inputEnabled: inputEnabled, signInResult: signInResult)
     }
 }

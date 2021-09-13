@@ -22,6 +22,7 @@ protocol HasAPIClientService {
 // MARK: - Extension
 struct APIClientStub: APIClientService {
     private struct StubError: Error { }
+    
     let allSuccess: Bool
     func signOut() -> Single<()> {
         if allSuccess {
