@@ -10,22 +10,28 @@ import LoyaltyAPIClient
 import RxSwift
 import RxCocoa
 
+protocol AddEditVCDelegate: AnyObject {
+    func addEditVC(_ controller: AddEditVC, didAddorUpdateCard: CardResource)
+    func addEditVC(_ controller: AddEditVC, failedToEditCard: Error)
+}
+
 final class AddEditVC: UIViewController {
     @IBOutlet private(set) weak var addEditButton: UIButton!
     @IBOutlet private(set) weak var nameTextField: UITextField!
 
     @IBOutlet private(set) weak var codeTextField: UITextField!
     @IBOutlet private(set) weak var colorTextField: UITextField!
-    var currentModel: CardResource?
+    private var currentModel: CardResource?
 
     private let disposeBag = DisposeBag()
 
     // MARK: - Init
     typealias Dependencies = HasAPIClientService
     let dependencies: Dependencies
-
-    init(dependencies: Dependencies) {
+    weak var delegate: AddEditVCDelegate?
+    init(dependencies: Dependencies, currentModel: CardResource?) {
         self.dependencies = dependencies
+        self.currentModel = currentModel
         super.init(nibName: "AddEditVC", bundle: nil)
     }
 
@@ -52,9 +58,7 @@ final class AddEditVC: UIViewController {
     }
 
     @IBAction func addEditTriggered(_ sender: Any) {
-
         self.addEdit()
-
     }
 
     private func addEdit() {
@@ -67,9 +71,11 @@ final class AddEditVC: UIViewController {
             self.dependencies.apiService.updateLoyalty(id: currentModel.id, name: currentModel.name, code: code, color: code)
                 .observe(on: MainScheduler.instance)
                 .subscribe { [weak self] ressource in
-                    self?.performSegue(withIdentifier: "unwindFromAddEdit", sender: self)
-                } onFailure: { error in
-                    self.presentAlertController(message: error.localizedDescription)
+                    guard let self = self else { return }
+                    self.delegate?.addEditVC(self, didAddorUpdateCard: ressource)
+                } onFailure: { [weak self] error in
+                    guard let self = self else { return }
+                    self.delegate?.addEditVC(self, failedToEditCard: error)
                 }.disposed(by: self.disposeBag)
 
         } else {
@@ -77,11 +83,12 @@ final class AddEditVC: UIViewController {
             self.dependencies.apiService.addLoyalty(name: name, code: code, color: color)
                 .observe(on: MainScheduler.instance)
                 .subscribe { [weak self] ressource in
-                    self?.performSegue(withIdentifier: "unwindFromAddEdit", sender: self)
-                } onFailure: { error in
-                    self.presentAlertController(message: error.localizedDescription)
+                    guard let self = self else { return }
+                    self.delegate?.addEditVC(self, didAddorUpdateCard: ressource)
+                } onFailure: { [weak self] error in
+                    guard let self = self else { return }
+                    self.delegate?.addEditVC(self, failedToEditCard: error)
                 }.disposed(by: self.disposeBag)
-            
         }
     }
 }

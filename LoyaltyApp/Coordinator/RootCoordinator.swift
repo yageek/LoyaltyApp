@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import LoyaltyAPIClient
 final class RootCoordinator: BaseCoordinator {
 
     private var window: UIWindow
@@ -66,4 +66,38 @@ extension RootCoordinator: SignUpVCDelegate {
 // MARK: - CardListVCDelegate
 extension  RootCoordinator: CardListVCDelegate {
 
+    func listViewControllerDidSignout(_ controller: CardListVC) {
+        self.rootNavigationController.popViewController(animated: true)
+    }
+
+    func listViewControllerRequiredAddCard(_ controller: CardListVC) {
+        let add = AddEditVC(dependencies: AppDi.shared, currentModel: nil)
+        add.delegate = self
+        controller.present(add, animated: true)
+    }
+    func listViewControllerDidSelectUserInfo(_ controller: CardListVC) {
+        let controller = InfosVC(dependencies: AppDi.shared, totalCount: controller.totalCount ?? 0)
+        controller.delegate = self
+        self.rootNavigationController.pushViewController(controller, animated: true)
+    }
+}
+
+// MARK: - InfosVCDelegate
+extension RootCoordinator: InfosVCDelegate {
+    func infosVCDidSignout(_ controller: InfosVC) {
+        self.rootNavigationController.popToRootViewController(animated: true)
+    }
+}
+// MARK: - AddEditVCDelegate
+extension RootCoordinator: AddEditVCDelegate {
+    func addEditVC(_ controller: AddEditVC, failedToEditCard error: Error) {
+        controller.presentAlertController(message: error.localizedDescription)
+    }
+
+    func addEditVC(_ controller: AddEditVC, didAddorUpdateCard: CardResource) {
+        controller.dismiss(animated: true)
+        if let list = self.rootNavigationController.topViewController as? CardListVC {
+            list.resetData()
+        }
+    }
 }

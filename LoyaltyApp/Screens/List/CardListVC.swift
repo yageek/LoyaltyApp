@@ -13,7 +13,9 @@ private let CardCellID = "CardCell"
 private let LoadingCellID = "LoadingCell"
 
 protocol CardListVCDelegate: AnyObject {
-
+    func listViewControllerDidSignout(_ controller: CardListVC)
+    func listViewControllerRequiredAddCard(_ controller: CardListVC)
+    func listViewControllerDidSelectUserInfo(_ controller: CardListVC)
 }
 final class CardListVC: UICollectionViewController {
 
@@ -34,10 +36,10 @@ final class CardListVC: UICollectionViewController {
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
 
-
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44.0))
+        item.contentInsets = NSDirectionalEdgeInsets(top: 5.0, leading: 5.0, bottom: 5.0, trailing: 5.0)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(150.0))
 
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
@@ -49,11 +51,9 @@ final class CardListVC: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-
-
     // MARK: - Var
     private var currentOffset: UInt?
-    private var totalCount: Int?
+    private(set) var totalCount: Int?
 
     let disposeBag = DisposeBag()
     private var elements: [CardResource] = []
@@ -62,8 +62,16 @@ final class CardListVC: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Collection View
+        self.collectionView.backgroundColor = .white
         self.collectionView.register(UINib(nibName: "CardCellView", bundle: nil), forCellWithReuseIdentifier: CardCellID)
         self.collectionView.register(UINib(nibName: "LoadingCellView", bundle: nil), forCellWithReuseIdentifier: LoadingCellID)
+
+        // Button
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(CardListVC.userInfo))
+
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(CardListVC.addCard))
+        // Update
 
         let dataSource = UICollectionViewDiffableDataSource<Section, Cell>(collectionView: self.collectionView) { (collectionView, indexPath, element) -> UICollectionViewCell? in
             switch  element {
@@ -142,24 +150,11 @@ final class CardListVC: UICollectionViewController {
                 self?.presentAlertController(message: error.localizedDescription)
             }
         }.disposed(by: self.disposeBag)
-
-
     }
 
     // MARK: - Unwind
-    @IBAction func unwindFromUserInfo(segue: UIStoryboardSegue) { }
-    @IBAction func unwindFromAddEditCancel(segue: UIStoryboardSegue) { }
-    @IBAction func unwindFromAddEdit(segue: UIStoryboardSegue) {
-        self.resetData()
-    }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let infosVC = segue.destination as? InfosVC {
-            infosVC.totalCount = self.totalCount ?? -1
-        }
-    }
-
-    private func resetData() {
+    func resetData() {
         self.elements.removeAll()
         self.currentOffset = nil
         self.totalCount = nil
@@ -168,6 +163,26 @@ final class CardListVC: UICollectionViewController {
         self.dataSource?.apply(patch)
 
         loadNextPage()
+    }
 
+    // MARK: - Actions
+
+    @objc private func signout() {
+        self.dependencies.apiService.signOut().observe(on: MainScheduler.instance).subscribe { [weak self] _ in
+
+            guard let self = self else { return }
+            self.delegate?.listViewControllerDidSignout(self)
+            
+        } onFailure: { error in
+            print("Error: \(error)")
+        }.disposed(by: self.disposeBag)
+
+    }
+
+    @objc private func addCard() {
+        self.delegate?.listViewControllerRequiredAddCard(self)
+    }
+    @objc private func userInfo() {
+        self.delegate?.listViewControllerDidSelectUserInfo(self)
     }
 }

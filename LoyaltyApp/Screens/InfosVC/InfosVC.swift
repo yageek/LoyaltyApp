@@ -8,12 +8,18 @@
 import UIKit
 import RxSwift
 
+protocol InfosVCDelegate: AnyObject {
+    func infosVCDidSignout(_ controller: InfosVC)
+}
+
 final class InfosVC: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var loyaltyCountLabel: UILabel!
 
-    var totalCount: Int = 0
+    private let totalCount: Int
+
+    weak var delegate: InfosVCDelegate?
 
     // MARK: - Init
     typealias Dependencies = HasAPIClientService
@@ -21,7 +27,8 @@ final class InfosVC: UIViewController {
 
     let disposeBag = DisposeBag()
 
-    init(dependencies: Dependencies) {
+    init(dependencies: Dependencies, totalCount: Int) {
+        self.totalCount = totalCount
         self.dependencies = dependencies
         super.init(nibName: "InfosVC", bundle: nil)
     }
@@ -42,18 +49,17 @@ final class InfosVC: UIViewController {
                 self.nameLabel.text = value.name
                 self.loyaltyCountLabel.text = "\(self.totalCount) loyalties total"
             } onFailure: { [weak self] error in
-                self?.presentAlertController(message: error.localizedDescription) { [weak self] in
-                    self?.performSegue(withIdentifier: "unwindToCardListFromInfo", sender: self)
-                }
+                self?.presentAlertController(message: error.localizedDescription)
             }.disposed(by: self.disposeBag)
     }
 
     @IBAction func logOutTriggered(_ sender: Any) {
 
         self.dependencies.apiService.signOut()
-            .delaySubscription(.milliseconds(800), scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)        
             .subscribe { [weak self] _ in
-                self?.performSegue(withIdentifier: "unwindFromUserInfoToSignInSegue", sender: self)
+                guard let self = self else { return }
+                self.delegate?.infosVCDidSignout(self)
             }.disposed(by: self.disposeBag)
     }
 }
