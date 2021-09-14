@@ -14,7 +14,9 @@
 		882715AE25DEA85500147F20 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 882715AC25DEA85500147F20 /* LaunchScreen.storyboard */; };
 		882715BD25DEBBB000147F20 /* CardCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882715BC25DEBBB000147F20 /* CardCellView.swift */; };
 		8828917B25DFB183008FE0AD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8828917A25DFB183008FE0AD /* Utils.swift */; };
+		8838B99E26F09C0000692DE5 /* DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8838B99D26F09C0000692DE5 /* DI.swift */; };
 		8853D02226EF834B00DFD0F4 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8853D02126EF834B00DFD0F4 /* Core.swift */; };
+		8853D02326EF90B000DFD0F4 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8853D02126EF834B00DFD0F4 /* Core.swift */; };
 		8860548125E3F2AC00B552FE /* RxCocoaRuntime.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548025E3F2AC00B552FE /* RxCocoaRuntime.xcframework */; };
 		8860548225E3F2AC00B552FE /* RxCocoaRuntime.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548025E3F2AC00B552FE /* RxCocoaRuntime.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8860548525E3F2B000B552FE /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8860548425E3F2B000B552FE /* RxCocoa.xcframework */; };
@@ -98,6 +100,7 @@
 		882715AF25DEA85500147F20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		882715BC25DEBBB000147F20 /* CardCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCellView.swift; sourceTree = "<group>"; };
 		8828917A25DFB183008FE0AD /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		8838B99D26F09C0000692DE5 /* DI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DI.swift; sourceTree = "<group>"; };
 		8853D02126EF834B00DFD0F4 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		8860548025E3F2AC00B552FE /* RxCocoaRuntime.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxCocoaRuntime.xcframework; path = thirdParty/RxCocoaRuntime.xcframework; sourceTree = "<group>"; };
 		8860548425E3F2B000B552FE /* RxCocoa.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxCocoa.xcframework; path = thirdParty/RxCocoa.xcframework; sourceTree = "<group>"; };
@@ -204,6 +207,7 @@
 				882715AF25DEA85500147F20 /* Info.plist */,
 				8828917A25DFB183008FE0AD /* Utils.swift */,
 				8853D02126EF834B00DFD0F4 /* Core.swift */,
+				8838B99D26F09C0000692DE5 /* DI.swift */,
 			);
 			path = LoyaltyApp;
 			sourceTree = "<group>";
@@ -503,6 +507,7 @@
 				8828917B25DFB183008FE0AD /* Utils.swift in Sources */,
 				882715BD25DEBBB000147F20 /* CardCellView.swift in Sources */,
 				88E6039325DEC121000CE124 /* CardListVC.swift in Sources */,
+				8838B99E26F09C0000692DE5 /* DI.swift in Sources */,
 				8864D32025E4FABC007C3FCE /* RootCoordinator.swift in Sources */,
 				8864D32425E4FC79007C3FCE /* SignUpViewModel.swift in Sources */,
 				88F5DFBA25E3E8C2001E7E4B /* Services.swift in Sources */,
@@ -535,6 +540,7 @@
 			files = (
 				88D529C825E4126000C75A24 /* SignInViewModel.swift in Sources */,
 				88D529CF25E4128E00C75A24 /* Services.swift in Sources */,
+				8853D02326EF90B000DFD0F4 /* Core.swift in Sources */,
 				88D529C025E4124400C75A24 /* SignInViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

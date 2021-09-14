@@ -43,11 +43,11 @@ class BaseOperation: Operation {
 }
 
 /// A protocol representing something that can be cancelled
-public protocol CancelableRequest {
+public protocol CancellableRequest {
     /// Cancel the current request
     func cancel()
 }
 
 /// :nodoc:
-extension Operation: CancelableRequest { }
+extension Operation: CancellableRequest { }
 

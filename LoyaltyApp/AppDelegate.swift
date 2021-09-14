@@ -9,7 +9,7 @@ import UIKit
 import LoyaltyAPIClient
 
 extension LoyaltyAPIClient {
-    static let shared = LoyaltyAPIClient()
+    static let shared = APIClientStub(allSuccess: true)
 }
 
 @main

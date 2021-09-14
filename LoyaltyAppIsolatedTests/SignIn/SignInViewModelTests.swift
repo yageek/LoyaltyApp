@@ -12,10 +12,13 @@ import RxBlocking
 import RxTest
 
 struct LongLoader: APIClientService {
+    func signUp(email: String, password: String, name: String) -> Single<()> {
+        return .just(())
+    }
+
     let timeOut: DispatchTimeInterval
 
-    private let scheduler = ConcurrentDispatchQueueScheduler(queue:
-    .global())
+    private let scheduler = ConcurrentDispatchQueueScheduler(queue: .global())
     func signIn(email: String, password: String) -> Single<()> {
         return Single.just(()).delay(timeOut, scheduler: scheduler)
     }
@@ -33,6 +36,7 @@ class SignInViewModelTests: XCTestCase {
     var viewModel: SignInViewModel!
     var testScheduler: TestScheduler!
     var subscription: Cancelable!
+
     override func setUpWithError() throws {
         viewModel = SignInViewModel(dependencies: LongLoader(timeOut: .milliseconds(100)))
         testScheduler = TestScheduler(initialClock: 0)
@@ -44,10 +48,9 @@ class SignInViewModelTests: XCTestCase {
         }
     }
 
-    func testLockingInterface() throws {
+    func test_lock_interface_while_making_request() throws {
 
         let disposeBag = DisposeBag()
-
 
         let email: TestableObservable<String?> = testScheduler.createHotObservable([.next(100, nil), .next(200, ""), .next(300, "Login")])
         let pass: TestableObservable<String?> = testScheduler.createHotObservable([.next(90, nil), .next(210, ""), .next(340, "Password")])
@@ -61,14 +64,14 @@ class SignInViewModelTests: XCTestCase {
         testScheduler.scheduleAt(0) {
 
             // Bind inputs
-            email.bind(to: viewModel.emailInput).disposed(by: disposeBag)
-            pass.bind(to: viewModel.passInput).disposed(by: disposeBag)
-            button.bind(to: viewModel.buttonTriggered).disposed(by: disposeBag)
+            email.bind(to: viewModel.input.emailInput).disposed(by: disposeBag)
+            pass.bind(to: viewModel.input.passInput).disposed(by: disposeBag)
+            button.bind(to: viewModel.input.buttonTriggered).disposed(by: disposeBag)
 
             // Bind Outputs
-            viewModel.inputEnabled.drive(inputEnabled).disposed(by: disposeBag)
-            viewModel.isActivityIndicatorAnimating.drive(animating).disposed(by: disposeBag)
-            viewModel.signInResult.emit(onNext: { _ in }, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
+            viewModel.output.inputEnabled.drive(inputEnabled).disposed(by: disposeBag)
+            viewModel.output.isActivityIndicatorAnimating.drive(animating).disposed(by: disposeBag)
+            viewModel.output.signInResult.subscribe(onNext: { _ in }, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
             self.viewModel = viewModel
         }
 

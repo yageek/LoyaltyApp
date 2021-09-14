@@ -7,6 +7,8 @@
 
 import UIKit
 import LoyaltyAPIClient
+import RxSwift
+import RxCocoa
 
 final class AddEditVC: UIViewController {
     @IBOutlet private(set) weak var addEditButton: UIButton!
@@ -16,8 +18,14 @@ final class AddEditVC: UIViewController {
     @IBOutlet private(set) weak var colorTextField: UITextField!
     var currentModel: CardResource?
 
+    private let disposeBag = DisposeBag()
+
     // MARK: - Init
-    init() {
+    typealias Dependencies = HasAPIClientService
+    let dependencies: Dependencies
+
+    init(dependencies: Dependencies) {
+        self.dependencies = dependencies
         super.init(nibName: "AddEditVC", bundle: nil)
     }
 
@@ -56,30 +64,24 @@ final class AddEditVC: UIViewController {
         let color = self.colorTextField.text ?? ""
 
         if let currentModel = self.currentModel {
+            self.dependencies.apiService.updateLoyalty(id: currentModel.id, name: currentModel.name, code: code, color: code)
+                .observe(on: MainScheduler.instance)
+                .subscribe { [weak self] ressource in
+                    self?.performSegue(withIdentifier: "unwindFromAddEdit", sender: self)
+                } onFailure: { error in
+                    self.presentAlertController(message: error.localizedDescription)
+                }.disposed(by: self.disposeBag)
 
-            LoyaltyAPIClient.shared.updateLoyalty(id: currentModel.id, name: currentModel.name, code: code, color: color) { (result) in
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                    switch result {
-                    case .success(_):
-                        self.performSegue(withIdentifier: "unwindFromAddEdit", sender: self)
-                    case .failure(let error):
-                        self.presentAlertController(message: error.localizedDescription)
-                    }
-
-                }
-            }
         } else {
 
-            LoyaltyAPIClient.shared.addLoyalty(name: name, code: code, color: color) { (result) in
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                    switch result {
-                    case .success(_):
-                        self.performSegue(withIdentifier: "unwindFromAddEdit", sender: self)
-                    case .failure(let error):
-                        self.presentAlertController(message: error.localizedDescription)
-                    }
-                }
-            }
+            self.dependencies.apiService.addLoyalty(name: name, code: code, color: color)
+                .observe(on: MainScheduler.instance)
+                .subscribe { [weak self] ressource in
+                    self?.performSegue(withIdentifier: "unwindFromAddEdit", sender: self)
+                } onFailure: { error in
+                    self.presentAlertController(message: error.localizedDescription)
+                }.disposed(by: self.disposeBag)
+            
         }
     }
 }

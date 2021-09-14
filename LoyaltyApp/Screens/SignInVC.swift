@@ -30,7 +30,11 @@ final class SignInVC: UIViewController, Bindable {
     weak var delegate: SignInVCDelegate?
 
     // MARK: - Init
-    init() {
+    typealias Dependencies = HasAPIClientService
+
+    let dependencies: Dependencies
+    init(dependencies: Dependencies) {
+        self.dependencies = dependencies
         super.init(nibName: "SignInVC", bundle: nil)
     }
 
@@ -42,7 +46,7 @@ final class SignInVC: UIViewController, Bindable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let viewModel = SignInViewModel(dependencies: DI())
+        let viewModel = SignInViewModel(dependencies: self.dependencies)
         self.bind(to: viewModel)
     }
 

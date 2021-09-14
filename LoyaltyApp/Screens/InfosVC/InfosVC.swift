@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import LoyaltyAPIClient
+import RxSwift
 
 final class InfosVC: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
@@ -16,7 +16,13 @@ final class InfosVC: UIViewController {
     var totalCount: Int = 0
 
     // MARK: - Init
-    init() {
+    typealias Dependencies = HasAPIClientService
+    let dependencies: Dependencies
+
+    let disposeBag = DisposeBag()
+
+    init(dependencies: Dependencies) {
+        self.dependencies = dependencies
         super.init(nibName: "InfosVC", bundle: nil)
     }
 
@@ -27,30 +33,27 @@ final class InfosVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        LoyaltyAPIClient.shared.getUserInfo { [weak self] (result) in
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
+        self.dependencies.apiService.getUserInfo()
+            .observe(on: MainScheduler.instance)
+            .subscribe { [weak self] value in
                 guard let self = self else { return }
-                switch result {
-                case .failure(let error):
-                    self.presentAlertController(message: error.localizedDescription) { [weak self] in
-                        self?.performSegue(withIdentifier: "unwindToCardListFromInfo", sender: self)
-                    }
-                case .success(let value):
-                    self.emailLabel.text = value.email
-                    self.nameLabel.text = value.name
-                    self.loyaltyCountLabel.text = "\(self.totalCount) loyalties total"
+
+                self.emailLabel.text = value.email
+                self.nameLabel.text = value.name
+                self.loyaltyCountLabel.text = "\(self.totalCount) loyalties total"
+            } onFailure: { [weak self] error in
+                self?.presentAlertController(message: error.localizedDescription) { [weak self] in
+                    self?.performSegue(withIdentifier: "unwindToCardListFromInfo", sender: self)
                 }
-            }
-        }
+            }.disposed(by: self.disposeBag)
     }
 
     @IBAction func logOutTriggered(_ sender: Any) {
 
-        LoyaltyAPIClient.shared.signOut() { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
-                guard let self = self else { return  }
-                self.performSegue(withIdentifier: "unwindFromUserInfoToSignInSegue", sender: self)
-            }
-        }
+        self.dependencies.apiService.signOut()
+            .delaySubscription(.milliseconds(800), scheduler: MainScheduler.instance)
+            .subscribe { [weak self] _ in
+                self?.performSegue(withIdentifier: "unwindFromUserInfoToSignInSegue", sender: self)
+            }.disposed(by: self.disposeBag)
     }
 }

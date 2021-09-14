@@ -43,7 +43,7 @@ final class SignUpVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let viewModel = SignUpViewModel(dependencies: DI())
+        let viewModel = SignUpViewModel(dependencies: AppDi.shared)
 
         // Binds Inputs
         emailTextField.rx.text.bind(to: viewModel.emailInput).disposed(by: self.disposeBag)
@@ -63,7 +63,7 @@ final class SignUpVC: UIViewController {
         viewModel.inputEnabled.drive(signUpButton.rx.isEnabled).disposed(by: self.disposeBag)
 
         // Sign in result
-        viewModel.signInResult.emit(onNext: { [weak self] (result) in
+        viewModel.signInResult.drive(onNext: { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .failure(let credentialError):
@@ -73,7 +73,6 @@ final class SignUpVC: UIViewController {
             }
         }).disposed(by: self.disposeBag)
         self.viewModel = viewModel
-
 
     }
 }

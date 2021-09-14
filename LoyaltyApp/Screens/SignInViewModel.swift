@@ -67,6 +67,7 @@ final class SignInViewModel: ViewModel {
                 .map { Result<(), CredentialError>.success(()) }
                 .catch { .just(.failure(CredentialError(email: (try? email.value()) ?? "", error: $0 )))}
             }
+            .observe(on: MainScheduler.instance)
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(false)
             }).asObservable()

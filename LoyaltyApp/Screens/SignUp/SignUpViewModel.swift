@@ -24,7 +24,7 @@ final class SignUpViewModel {
     private var _isActivityIndicatorAnimating: BehaviorRelay<Bool>
     var isActivityIndicatorAnimating: Driver<Bool> { return self._isActivityIndicatorAnimating.asDriver() }
 
-    let signInResult: Signal<Result<(), Error>>
+    let signInResult: Driver<Result<(), Error>>
     var inputEnabled: Driver<Bool>
 
     // MARK: - iVar | Di
@@ -49,11 +49,11 @@ final class SignUpViewModel {
                 isActivityIndicatorHidden.accept(true)
             })
             .flatMap {
-                dependencies.apiService.signUp(name: $0.2, email: $0.0, password: $0.1).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance)
+                dependencies.apiService.signUp(email: $0.0, password: $0.1, name: $0.2).delaySubscription(SignInViewModel.delayInterval, scheduler: MainScheduler.instance)
                     .map { Result<(), Error>.success(()) }
                     .catch { .just(.failure($0)) }
             }
-            .asSignal(onErrorRecover: { Signal.just(.failure( $0 ))} )
+            .asDriver(onErrorDriveWith: .empty())
             .do(onNext: { _ in
                 isActivityIndicatorHidden.accept(false)
             })
