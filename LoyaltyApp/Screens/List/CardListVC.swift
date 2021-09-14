@@ -17,6 +17,7 @@ protocol CardListVCDelegate: AnyObject {
     func listViewControllerRequiredAddCard(_ controller: CardListVC)
     func listViewControllerDidSelectUserInfo(_ controller: CardListVC)
 }
+
 final class CardListVC: UICollectionViewController {
 
     enum Section: Hashable {
@@ -28,11 +29,13 @@ final class CardListVC: UICollectionViewController {
         case loading
     }
 
-    typealias Dependencies = HasAPIClientService
+    weak var delegate: CardListVCDelegate?
 
+    typealias Dependencies = HasAPIClientService
     let dependencies: Dependencies
 
-    weak var delegate: CardListVCDelegate?
+    let searchController = UISearchController(searchResultsController: nil)
+
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
 
@@ -88,6 +91,7 @@ final class CardListVC: UICollectionViewController {
         self.dataSource = dataSource
         self.loadNextPage()
 
+        self.navigationItem.searchController = self.searchController
     }
 
     // MARK: UICollectionViewDelegate
