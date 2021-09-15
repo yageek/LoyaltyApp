@@ -12,7 +12,6 @@ import RxRelay
 import UIKit
 import LoyaltyAPIClient
 
-
 final class CardListViewModel: ViewModel {
     // MARK: - Data
     enum Section: Hashable {
@@ -26,7 +25,6 @@ final class CardListViewModel: ViewModel {
 
     // MARK: - I/O
     struct Input {
-        let textSearch: AnyObserver<String?> // Input from the search
         let willDisplayCell: AnyObserver<IndexPath>
     }
 
@@ -50,12 +48,11 @@ final class CardListViewModel: ViewModel {
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
 
-        let textSearch = BehaviorSubject<String?>(value: nil)
         let willDisplayCell = PublishSubject<IndexPath>()
 
         let content = BehaviorRelay<NSDiffableDataSourceSnapshot<Section, Cell>>(value: NSDiffableDataSourceSnapshot())
 
-        self.input = Input(textSearch: textSearch.asObserver(), willDisplayCell: willDisplayCell.asObserver())
+        self.input = Input(willDisplayCell: willDisplayCell.asObserver())
         self.output = Output(content: content.asDriver())
 
         willDisplayCell.withLatestFrom(content) { ($0, $1) }
@@ -69,18 +66,18 @@ final class CardListViewModel: ViewModel {
                 return false
             }
             .withLatestFrom(self.state)
-            .startWith(.initial) // Force first load
+            .startWith(.initial)
             .flatMap { self.dependencies.apiService.getAllLoyalties(offset: $0.currentOffset , limit: CardListViewModel.PageCount).asObservable() }
             .scan(.initial, accumulator: ListPagerState.reduce)
             .bind(to: self.state).disposed(by: self.disposeBag)
 
         // Binds to output
-        self.state.compactMap { state in
-            guard case .pageLoaded(_, let cards, let loadNextPage) = state else { return nil }
+        self.state.filter { !$0.isFirstLoad }
+            .compactMap { state in
             var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
             snapshot.appendSections([.main])
-            var cells = cards.map { Cell.card($0) }
-            if loadNextPage {
+            var cells = state.cards.map { Cell.card($0) }
+            if state.loadNextPage {
                 cells.append(.loading)
             }
             snapshot.appendItems(cells)

@@ -25,7 +25,6 @@ final class CardListVC: UICollectionViewController, Bindable {
     typealias Dependencies = HasAPIClientService
     let dependencies: Dependencies
 
-    let searchController = UISearchController(searchResultsController: nil)
     private var viewModel: CardListViewModel?
 
     init(dependencies: Dependencies) {
@@ -82,8 +81,6 @@ final class CardListVC: UICollectionViewController, Bindable {
         self.collectionView.dataSource = dataSource
         self.dataSource = dataSource
 
-        self.navigationItem.searchController = self.searchController
-
         let viewModel = CardListViewModel(dependencies: self.dependencies)
         self.bind(to: viewModel)
         self.viewModel = viewModel
@@ -95,7 +92,6 @@ final class CardListVC: UICollectionViewController, Bindable {
 
         // Inputs
         self.collectionView.rx.willDisplayCell.map { $1 }.bind(to: viewModel.input.willDisplayCell).disposed(by: self.disposeBag)
-        self.searchController.searchBar.rx.text.bind(to: viewModel.input.textSearch).disposed(by: self.disposeBag)
 
         // Outputs
         viewModel.output.content.drive(onNext: { [weak self] snapshot in

@@ -8,29 +8,31 @@
 import Foundation
 import LoyaltyAPIClient
 
-enum ListPagerState {
-    case initial
-    case pageLoaded(offset: Int, cards: [CardResource], loadNextPage: Bool)
-
-    var currentOffset: Int {
-        switch self {
-        case .initial:
-            return 0
-        case .pageLoaded(offset: let offset, cards: _, loadNextPage: _):
-            return offset
-        }
+struct ListPagerState: Equatable {
+    let cards: [CardResource]
+    let loadNextPage: Bool
+    let isFirstLoad: Bool
+    
+    private init(cards: [CardResource], loadNextPage: Bool, neverLoad: Bool) {
+        self.cards = cards
+        self.loadNextPage = loadNextPage
+        self.isFirstLoad = neverLoad
     }
 
-    static func reduce(lastState: ListPagerState, page: CardPageResponse) -> ListPagerState {
+    var currentOffset: Int {
+        self.cards.count
+    }
+    
+    static var initial: ListPagerState = ListPagerState(cards: [], loadNextPage: true, neverLoad: true)
 
-        switch lastState {
-        case .initial:
+    static func reduce(lastState: ListPagerState, page: CardPageResponse) -> ListPagerState {
+        if lastState.isFirstLoad {
             let loadNextPage = page.cards.count < page.count
-            return .pageLoaded(offset: page.cards.count, cards: page.cards, loadNextPage: loadNextPage)
-        case .pageLoaded(offset: _, cards: let lastCards, _):
-            let cards = lastCards + page.cards
+            return ListPagerState(cards: page.cards, loadNextPage: loadNextPage, neverLoad: false)
+        } else {
+            let cards = lastState.cards + page.cards
             let loadNextPage = cards.count < page.count
-            return .pageLoaded(offset: cards.count, cards: cards, loadNextPage: loadNextPage)
+            return ListPagerState(cards: cards, loadNextPage: loadNextPage, neverLoad: false)
         }
     }
 }
