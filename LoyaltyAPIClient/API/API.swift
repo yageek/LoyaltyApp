@@ -16,6 +16,7 @@ enum API {
     case deleteLoyalty(id: Int)
     case getLoyalties(limit: Int, offset: Int)
     case getUserInfos
+    case search
 }
 
 let devBaseHost = URL(string: "http://localhost:8000")!
@@ -24,7 +25,7 @@ extension API: Endpoint {
     var method: Method {
         switch self {
 
-        case .signIn, .signOut, .signUp:
+        case .signIn, .signOut, .signUp, .search:
             return .post
         case .addLoyalty, .updateLoyalty:
             return .put
@@ -55,12 +56,14 @@ extension API: Endpoint {
             return "loyalties/\(id)"
         case .getUserInfos:
             return "userinfo"
+        case .search:
+            return "loyalties/search"
         }
     }
 
     var params: [String : Any?] {
         switch self {
-        case .signIn, .signOut, .signUp, .addLoyalty, .deleteLoyalty, .getUserInfos, .updateLoyalty:
+        case .signIn, .signOut, .signUp, .addLoyalty, .deleteLoyalty, .getUserInfos, .updateLoyalty, .search:
             return [:]
         case .getLoyalties(let limit, let offet):
             return ["limit": limit, "offset": offet]
@@ -85,6 +88,8 @@ extension API: Endpoint {
         case .getLoyalties:
             return .json
         case .getUserInfos:
+            return .json
+        case .search:
             return .json
         }
     }

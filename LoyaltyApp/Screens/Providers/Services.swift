@@ -18,6 +18,7 @@ protocol APIClientService {
     func getAllLoyalties(offset: Int, limit: Int) -> Single<CardPageResponse>
     func addLoyalty(name: String, code: String, color: String?) -> Single<CardResource>
     func updateLoyalty(id: Int, name: String, code: String, color: String?) -> Single<CardResource>
+    func searchLoyalty(byName name: String?) -> Single<[CardResource]>
 }
 
 protocol HasAPIClientService {
@@ -81,6 +82,14 @@ struct APIClientStub: APIClientService {
     func updateLoyalty(id: Int, name: String, code: String, color: String?) -> Single<CardResource> {
         if allSuccess {
             return .just(CardResource(id: 0, name: "John AppleSeed", code: "1234", color: nil))
+        } else {
+            return .error(StubError())
+        }
+    }
+
+    func searchLoyalty(byName name: String?) -> Single<[CardResource]> {
+        if allSuccess {
+            return .just([CardResource(id: 0, name: "Carte 1", code: "123", color: nil)])
         } else {
             return .error(StubError())
         }
@@ -170,6 +179,19 @@ extension LoyaltyAPIClient: APIClientService {
         return Single.create { single in
             let task = self.updateLoyalty(id: id, name: name, code: code, color: color) { result in
                 single(result)
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
+    }
+
+    func searchLoyalty(byName name: String?) -> Single<[CardResource]> {
+        return Single.create { obs in
+
+            let task = self.searchLoyalty(byName: name) { result in
+                obs(result)
             }
 
             return Disposables.create {

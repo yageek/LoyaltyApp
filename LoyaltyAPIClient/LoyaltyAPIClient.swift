@@ -81,4 +81,12 @@ public final class LoyaltyAPIClient {
             completion(converted)
         }
     }
+
+    @discardableResult public func searchLoyalty(byName name: String?, completion: @escaping (Result<[CardResource], Error>) -> Void) -> CancellableRequest {
+        let body = SearchBody(name: name ?? "")
+        return self.execute(api: .search , body: body) { (result: Result<[CardResource]?, Error>) in
+            let converted: Result<[CardResource], Error> = result.flatMap({ Result.success($0!) })
+            completion(converted)
+        }
+    }
 }

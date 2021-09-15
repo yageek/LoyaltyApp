@@ -15,6 +15,8 @@
 		882715BD25DEBBB000147F20 /* CardCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882715BC25DEBBB000147F20 /* CardCellView.swift */; };
 		8828917B25DFB183008FE0AD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8828917A25DFB183008FE0AD /* Utils.swift */; };
 		882DE41F26F1DA7700A4525D /* ListPagerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882DE41E26F1DA7700A4525D /* ListPagerState.swift */; };
+		882DE42226F2220900A4525D /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882DE42126F2220900A4525D /* SearchVC.swift */; };
+		882DE42426F2223400A4525D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882DE42326F2223400A4525D /* SearchViewModel.swift */; };
 		8838B99E26F09C0000692DE5 /* DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8838B99D26F09C0000692DE5 /* DI.swift */; };
 		8838B9A026F0AD9200692DE5 /* CardListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8838B99F26F0AD9200692DE5 /* CardListViewModel.swift */; };
 		8853D02226EF834B00DFD0F4 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8853D02126EF834B00DFD0F4 /* Core.swift */; };
@@ -48,7 +50,6 @@
 		88D529B625E4120D00C75A24 /* RxTest.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D529B525E4120D00C75A24 /* RxTest.xcframework */; };
 		88D529C025E4124400C75A24 /* SignInViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D529BF25E4124400C75A24 /* SignInViewModelTests.swift */; };
 		88D529C825E4126000C75A24 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8860549025E3F85C00B552FE /* SignInViewModel.swift */; };
-		88D529CC25E4127E00C75A24 /* Providers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D529CB25E4127E00C75A24 /* Providers.swift */; };
 		88D529CF25E4128E00C75A24 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F5DFB925E3E8C2001E7E4B /* Services.swift */; };
 		88E6039325DEC121000CE124 /* CardListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E6039225DEC121000CE124 /* CardListVC.swift */; };
 		88E6039725DEC307000CE124 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E6039625DEC307000CE124 /* SignUpVC.swift */; };
@@ -103,6 +104,8 @@
 		882715BC25DEBBB000147F20 /* CardCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCellView.swift; sourceTree = "<group>"; };
 		8828917A25DFB183008FE0AD /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		882DE41E26F1DA7700A4525D /* ListPagerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPagerState.swift; sourceTree = "<group>"; };
+		882DE42126F2220900A4525D /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
+		882DE42326F2223400A4525D /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		8838B99D26F09C0000692DE5 /* DI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DI.swift; sourceTree = "<group>"; };
 		8838B99F26F0AD9200692DE5 /* CardListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListViewModel.swift; sourceTree = "<group>"; };
 		8853D02126EF834B00DFD0F4 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
@@ -129,7 +132,6 @@
 		88D529B525E4120D00C75A24 /* RxTest.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxTest.xcframework; path = thirdParty/RxTest.xcframework; sourceTree = "<group>"; };
 		88D529BE25E4124400C75A24 /* LoyaltyAppIsolatedTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LoyaltyAppIsolatedTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		88D529BF25E4124400C75A24 /* SignInViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModelTests.swift; sourceTree = "<group>"; };
-		88D529CB25E4127E00C75A24 /* Providers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Providers.swift; sourceTree = "<group>"; };
 		88E6039225DEC121000CE124 /* CardListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListVC.swift; sourceTree = "<group>"; };
 		88E6039625DEC307000CE124 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		88E6039B25DEC32C000CE124 /* AddEditVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditVC.swift; sourceTree = "<group>"; };
@@ -229,6 +231,15 @@
 			path = List;
 			sourceTree = "<group>";
 		};
+		882DE42026F221A100A4525D /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				882DE42126F2220900A4525D /* SearchVC.swift */,
+				882DE42326F2223400A4525D /* SearchViewModel.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		8860547F25E3F2AC00B552FE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,6 +314,7 @@
 		88E6039525DEC2EA000CE124 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				882DE42026F221A100A4525D /* Search */,
 				88F5DFB825E3E8AA001E7E4B /* Providers */,
 				88F5DFB125E3CC28001E7E4B /* AddEdditVC */,
 				88F5DFAC25E3CBB1001E7E4B /* InfosVC */,
@@ -355,7 +367,6 @@
 			isa = PBXGroup;
 			children = (
 				88F5DFB925E3E8C2001E7E4B /* Services.swift */,
-				88D529CB25E4127E00C75A24 /* Providers.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -522,7 +533,8 @@
 				882DE41F26F1DA7700A4525D /* ListPagerState.swift in Sources */,
 				8853D02226EF834B00DFD0F4 /* Core.swift in Sources */,
 				88E6039F25DEC360000CE124 /* InfosVC.swift in Sources */,
-				88D529CC25E4127E00C75A24 /* Providers.swift in Sources */,
+				882DE42426F2223400A4525D /* SearchViewModel.swift in Sources */,
+				882DE42226F2220900A4525D /* SearchVC.swift in Sources */,
 				8860549125E3F85C00B552FE /* SignInViewModel.swift in Sources */,
 				882715A425DEA85400147F20 /* SceneDelegate.swift in Sources */,
 				88E6039C25DEC32C000CE124 /* AddEditVC.swift in Sources */,

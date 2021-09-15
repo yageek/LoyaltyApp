@@ -80,6 +80,12 @@ extension  RootCoordinator: CardListVCDelegate {
         controller.delegate = self
         self.rootNavigationController.pushViewController(controller, animated: true)
     }
+
+    func listViewControllerDidSelectSearch(_ controller: CardListVC) {
+
+        let search = SearchViewController(dependencies: AppDi.shared)
+        self.rootNavigationController.pushViewController(search, animated: true)
+    }
 }
 
 // MARK: - InfosVCDelegate

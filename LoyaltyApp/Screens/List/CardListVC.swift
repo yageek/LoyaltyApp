@@ -16,6 +16,7 @@ protocol CardListVCDelegate: AnyObject {
     func listViewControllerDidSignout(_ controller: CardListVC)
     func listViewControllerRequiredAddCard(_ controller: CardListVC)
     func listViewControllerDidSelectUserInfo(_ controller: CardListVC)
+    func listViewControllerDidSelectSearch(_ controller: CardListVC)
 }
 
 final class CardListVC: UICollectionViewController, Bindable {
@@ -25,7 +26,6 @@ final class CardListVC: UICollectionViewController, Bindable {
     typealias Dependencies = HasAPIClientService
     let dependencies: Dependencies
 
-    let searchController = UISearchController(searchResultsController: nil)
     private var viewModel: CardListViewModel?
 
     init(dependencies: Dependencies) {
@@ -65,9 +65,11 @@ final class CardListVC: UICollectionViewController, Bindable {
         // Button
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(CardListVC.userInfo))
 
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(CardListVC.addCard))
+        self.navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(CardListVC.addCard)),
+            UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(CardListVC.search))
+        ]
         // Update
-
         let dataSource = UICollectionViewDiffableDataSource<CardListViewModel.Section, CardListViewModel.Cell>(collectionView: self.collectionView) { (collectionView, indexPath, element) -> UICollectionViewCell? in
             switch  element {
             case .card(let item):
@@ -82,27 +84,27 @@ final class CardListVC: UICollectionViewController, Bindable {
         self.collectionView.dataSource = dataSource
         self.dataSource = dataSource
 
-        self.navigationItem.searchController = self.searchController
-
         let viewModel = CardListViewModel(dependencies: self.dependencies)
         self.bind(to: viewModel)
         self.viewModel = viewModel
     }
 
     // MARK: - Unwind
-
     func bind(to viewModel: CardListViewModel) {
 
         // Inputs
         self.collectionView.rx.willDisplayCell.map { $1 }.bind(to: viewModel.input.willDisplayCell).disposed(by: self.disposeBag)
-        self.searchController.searchBar.rx.text.bind(to: viewModel.input.textSearch).disposed(by: self.disposeBag)
 
         // Outputs
         viewModel.output.content.drive(onNext: { [weak self] snapshot in
             self?.dataSource?.apply(snapshot)
         }).disposed(by: self.disposeBag)
-
     }
+
+    func resetData() {
+        self.viewModel?.input.resetData.onNext(())
+    }
+    
     // MARK: - Actions
     @objc private func signout() {
         self.dependencies.apiService.signOut().observe(on: MainScheduler.instance).subscribe { [weak self] _ in
@@ -119,7 +121,12 @@ final class CardListVC: UICollectionViewController, Bindable {
     @objc private func addCard() {
         self.delegate?.listViewControllerRequiredAddCard(self)
     }
+
     @objc private func userInfo() {
         self.delegate?.listViewControllerDidSelectUserInfo(self)
+    }
+
+    @objc private func search() {
+        self.delegate?.listViewControllerDidSelectSearch(self)
     }
 }

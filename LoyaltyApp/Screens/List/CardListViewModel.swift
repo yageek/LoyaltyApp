@@ -25,8 +25,8 @@ final class CardListViewModel: ViewModel {
 
     // MARK: - I/O
     struct Input {
-        let textSearch: AnyObserver<String?> // Input from the search
         let willDisplayCell: AnyObserver<IndexPath>
+        let resetData: AnyObserver<()>
     }
 
     let input: Input
@@ -49,15 +49,16 @@ final class CardListViewModel: ViewModel {
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
 
-        let textSearch = BehaviorSubject<String?>(value: nil)
         let willDisplayCell = PublishSubject<IndexPath>()
+        let reset = PublishSubject<()>()
 
         let content = BehaviorRelay<NSDiffableDataSourceSnapshot<Section, Cell>>(value: NSDiffableDataSourceSnapshot())
 
-        self.input = Input(textSearch: textSearch.asObserver(), willDisplayCell: willDisplayCell.asObserver())
+        self.input = Input(willDisplayCell: willDisplayCell.asObserver(), resetData: reset.asObserver())
         self.output = Output(content: content.asDriver())
-
-        willDisplayCell.withLatestFrom(content) { ($0, $1) }
+        
+        // Manage paging
+        let downloadEvents = willDisplayCell.withLatestFrom(content) { ($0, $1) }
             .filter { indexPath, content in
                 let section = content.sectionIdentifiers[indexPath.section]
                 let item = content.itemIdentifiers(inSection: section)[indexPath.row]
@@ -68,14 +69,23 @@ final class CardListViewModel: ViewModel {
                 return false
             }
             .withLatestFrom(self.state)
-            .startWith(.initial)
-            .flatMap { self.dependencies.apiService.getAllLoyalties(offset: $0.currentOffset , limit: CardListViewModel.PageCount).asObservable() }
+            .flatMap {
+                self.dependencies.apiService.getAllLoyalties(offset: $0.currentOffset , limit: CardListViewModel.PageCount)
+                    .delay(.seconds(1), scheduler: MainScheduler.instance)
+                    .asObservable()
+
+            }
+            .map { ListPagerState.Event.pageDownloaded($0) }
+
+        let deleteEvents = reset.map { _ in ListPagerState.Event.reset }
+
+        Observable.merge([deleteEvents, downloadEvents])
             .scan(.initial, accumulator: ListPagerState.reduce)
             .bind(to: self.state).disposed(by: self.disposeBag)
 
         // Binds to output
-        self.state.filter { !$0.isFirstLoad }
-            .compactMap { state in
+        self.state
+            .map { state in
             var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
             snapshot.appendSections([.main])
             var cells = state.cards.map { Cell.card($0) }
@@ -85,6 +95,9 @@ final class CardListViewModel: ViewModel {
             snapshot.appendItems(cells)
             return snapshot
         }.bind(to: content).disposed(by: self.disposeBag)
+
     }
+
+
 
 }

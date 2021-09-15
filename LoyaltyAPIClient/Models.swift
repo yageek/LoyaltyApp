@@ -36,6 +36,14 @@ struct CardData: Encodable {
     let color: String?
 }
 
+struct SearchBody: Encodable {
+    let name: String
+
+    enum CodingKeys: String, CodingKey {
+        case name = "name_search"
+    }
+}
+
 // MARK: - CardResource
 public struct CardResource: Decodable, Hashable {
     public init(id: Int, name: String, code: String, color: String?) {
