@@ -98,6 +98,8 @@ extension RootCoordinator: AddEditVCDelegate {
         controller.dismiss(animated: true)
         if let list = self.rootNavigationController.topViewController as? CardListVC {
             // Reset
+            list.resetData()
         }
     }
+    
 }
