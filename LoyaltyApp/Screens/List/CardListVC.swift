@@ -18,16 +18,7 @@ protocol CardListVCDelegate: AnyObject {
     func listViewControllerDidSelectUserInfo(_ controller: CardListVC)
 }
 
-final class CardListVC: UICollectionViewController {
-
-    enum Section: Hashable {
-        case main
-    }
-
-    enum Cell: Hashable {
-        case card(CardResource)
-        case loading
-    }
+final class CardListVC: UICollectionViewController, Bindable {
 
     weak var delegate: CardListVCDelegate?
 
@@ -35,6 +26,7 @@ final class CardListVC: UICollectionViewController {
     let dependencies: Dependencies
 
     let searchController = UISearchController(searchResultsController: nil)
+    private var viewModel: CardListViewModel?
 
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
@@ -60,7 +52,7 @@ final class CardListVC: UICollectionViewController {
 
     let disposeBag = DisposeBag()
     private var elements: [CardResource] = []
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>?
+    private var dataSource: UICollectionViewDiffableDataSource<CardListViewModel.Section, CardListViewModel.Cell>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,7 +68,7 @@ final class CardListVC: UICollectionViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(CardListVC.addCard))
         // Update
 
-        let dataSource = UICollectionViewDiffableDataSource<Section, Cell>(collectionView: self.collectionView) { (collectionView, indexPath, element) -> UICollectionViewCell? in
+        let dataSource = UICollectionViewDiffableDataSource<CardListViewModel.Section, CardListViewModel.Cell>(collectionView: self.collectionView) { (collectionView, indexPath, element) -> UICollectionViewCell? in
             switch  element {
             case .card(let item):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CardCellID, for: indexPath) as! CardCellView
@@ -89,71 +81,12 @@ final class CardListVC: UICollectionViewController {
         }
         self.collectionView.dataSource = dataSource
         self.dataSource = dataSource
-        self.loadNextPage()
 
         self.navigationItem.searchController = self.searchController
-    }
 
-    // MARK: UICollectionViewDelegate
+        let viewModel = CardListViewModel(dependencies: self.dependencies)
 
-    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let viewLayer = cell.contentView.layer
-        viewLayer.borderColor = UIColor.red.cgColor
-        viewLayer.borderWidth = 2.0
-        viewLayer.cornerRadius = 20.0
-
-        guard let dataSource = self.dataSource else { return }
-        if case .loading = dataSource.itemIdentifier(for: indexPath) {
-            self.loadNextPage()
-        }
-    }
-    // MARK: - Loading
-
-    private func loadNextPage() {
-
-        if let totalCount = self.totalCount, self.elements.count >= totalCount { return }
-
-        let requestOffset: UInt
-        if let current = self.currentOffset {
-            requestOffset = current + 1
-        } else {
-            requestOffset = 0
-        }
-
-        let pageSize: UInt = 10
-
-        self.dependencies.apiService.getAllLoyalties(offset: requestOffset*pageSize, limit: pageSize).subscribe { [weak self] page in
-            guard let self = self else { return }
-            if self.totalCount == nil {
-                self.totalCount = page.count
-            }
-            // Memorize before
-
-            var newContents = self.elements
-            newContents.append(contentsOf: page.cards)
-
-            let contentSize = newContents.count
-
-            var patch = NSDiffableDataSourceSnapshot<Section, Cell>()
-            let cells = newContents.map { Cell.card($0) }
-            patch.appendSections([.main])
-            patch.appendItems(cells)
-
-            if contentSize < page.count {
-                patch.appendItems([.loading])
-            }
-
-            self.currentOffset = requestOffset
-            self.elements = newContents
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
-                self?.dataSource?.apply(patch)
-            }
-        } onFailure: { [weak self] error in
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) { [weak self] in
-                self?.presentAlertController(message: error.localizedDescription)
-            }
-        }.disposed(by: self.disposeBag)
+        self.viewModel = viewModel
     }
 
     // MARK: - Unwind
@@ -163,14 +96,23 @@ final class CardListVC: UICollectionViewController {
         self.currentOffset = nil
         self.totalCount = nil
 
-        let patch = NSDiffableDataSourceSnapshot<Section, Cell>()
+        let patch = NSDiffableDataSourceSnapshot<CardListViewModel.Section, CardListViewModel.Cell>()
         self.dataSource?.apply(patch)
-
-        loadNextPage()
     }
 
-    // MARK: - Actions
+    func bind(to viewModel: CardListViewModel) {
 
+        // Inputs
+        self.collectionView.rx.willDisplayCell.map { $1 }.bind(to: viewModel.input.willDisplayCell).disposed(by: self.disposeBag)
+        self.searchController.searchBar.rx.text.bind(to: viewModel.input.textSearch).disposed(by: self.disposeBag)
+
+        // Outputs
+        viewModel.output.content.drive(onNext: { [weak self] snapshot in
+            self?.dataSource?.apply(snapshot)
+        }).disposed(by: self.disposeBag)
+
+    }
+    // MARK: - Actions
     @objc private func signout() {
         self.dependencies.apiService.signOut().observe(on: MainScheduler.instance).subscribe { [weak self] _ in
 
