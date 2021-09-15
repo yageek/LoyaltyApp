@@ -14,7 +14,7 @@ enum API {
     case addLoyalty
     case updateLoyalty(id: Int)
     case deleteLoyalty(id: Int)
-    case getLoyalties(limit: UInt, offset: UInt)
+    case getLoyalties(limit: Int, offset: Int)
     case getUserInfos
 }
 

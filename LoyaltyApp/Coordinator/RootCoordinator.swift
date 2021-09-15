@@ -97,7 +97,7 @@ extension RootCoordinator: AddEditVCDelegate {
     func addEditVC(_ controller: AddEditVC, didAddorUpdateCard: CardResource) {
         controller.dismiss(animated: true)
         if let list = self.rootNavigationController.topViewController as? CardListVC {
-            list.resetData()
+            // Reset
         }
     }
 }

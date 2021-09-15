@@ -85,20 +85,11 @@ final class CardListVC: UICollectionViewController, Bindable {
         self.navigationItem.searchController = self.searchController
 
         let viewModel = CardListViewModel(dependencies: self.dependencies)
-
+        self.bind(to: viewModel)
         self.viewModel = viewModel
     }
 
     // MARK: - Unwind
-
-    func resetData() {
-        self.elements.removeAll()
-        self.currentOffset = nil
-        self.totalCount = nil
-
-        let patch = NSDiffableDataSourceSnapshot<CardListViewModel.Section, CardListViewModel.Cell>()
-        self.dataSource?.apply(patch)
-    }
 
     func bind(to viewModel: CardListViewModel) {
 

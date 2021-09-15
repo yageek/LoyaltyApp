@@ -15,7 +15,7 @@ protocol APIClientService {
     func signUp(email: String, password: String, name: String) -> Single<()>
     func signOut() -> Single<()>
     func getUserInfo() -> Single<UserInfoResponse>
-    func getAllLoyalties(offset: UInt, limit: UInt) -> Single<CardPageResponse>
+    func getAllLoyalties(offset: Int, limit: Int) -> Single<CardPageResponse>
     func addLoyalty(name: String, code: String, color: String?) -> Single<CardResource>
     func updateLoyalty(id: Int, name: String, code: String, color: String?) -> Single<CardResource>
 }
@@ -34,7 +34,7 @@ struct APIClientStub: APIClientService {
         }
     }
 
-    func getAllLoyalties(offset: UInt, limit: UInt) -> Single<CardPageResponse> {
+    func getAllLoyalties(offset: Int, limit: Int) -> Single<CardPageResponse> {
         if allSuccess {
             let cardresource = CardResource(id: 0, name: "Hello", code: "1234", color: "#fffff")
             return Single.just(CardPageResponse(count: 1, cards: [cardresource]))
@@ -101,7 +101,7 @@ extension LoyaltyAPIClient: APIClientService {
         }
     }
 
-    func getAllLoyalties(offset: UInt, limit: UInt) -> Single<CardPageResponse> {
+    func getAllLoyalties(offset: Int, limit: Int) -> Single<CardPageResponse> {
         return Single.create { single in
 
             let task = self.getAllLoyalties(offset: offset, limit: limit) { result in

@@ -43,9 +43,10 @@ final class CardListViewModel: ViewModel {
     let dependencies: Dependencies
 
     // MARK: - iVar
-    private var state = BehaviorRelay<ListPageState>(value: .initial)
+    private var state = BehaviorRelay<ListPagerState>(value: .initial)
     private let disposeBag = DisposeBag()
 
+    static let PageCount = 5
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
 
@@ -57,29 +58,32 @@ final class CardListViewModel: ViewModel {
         self.input = Input(textSearch: textSearch.asObserver(), willDisplayCell: willDisplayCell.asObserver())
         self.output = Output(content: content.asDriver())
 
-        // MAIN LOGIC
-        let loadingPageTrigger = willDisplayCell
-            .withLatestFrom(self.state) { ($0, $1) }
-            .filter { indexPath, state in
-                if case .loading = state.cards[indexPath.row] {
+        willDisplayCell.withLatestFrom(content) { ($0, $1) }
+            .filter { indexPath, content in
+                let section = content.sectionIdentifiers[indexPath.section]
+                let item = content.itemIdentifiers(inSection: section)[indexPath.row]
+
+                if case .loading = item {
                     return true
                 }
                 return false
             }
-            .flatMap { _, state -> Observable<(UInt, CardPageResponse)> in
-                let pageToLoad = state.currentOffset + 1
-                return self.dependencies.apiService.getAllLoyalties(offset: pageToLoad, limit: 10).map { (pageToLoad, $0) }.asObservable()
-            }
-
-        loadingPageTrigger
-            .scan(.initial, accumulator: ListPageState.reduce)
+            .withLatestFrom(self.state)
+            .startWith(.initial) // Force first load
+            .flatMap { self.dependencies.apiService.getAllLoyalties(offset: $0.currentOffset , limit: CardListViewModel.PageCount).asObservable() }
+            .scan(.initial, accumulator: ListPagerState.reduce)
             .bind(to: self.state).disposed(by: self.disposeBag)
 
         // Binds to output
-        self.state.map { state in
+        self.state.compactMap { state in
+            guard case .pageLoaded(_, let cards, let loadNextPage) = state else { return nil }
             var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
             snapshot.appendSections([.main])
-            snapshot.appendItems(state.cards)
+            var cells = cards.map { Cell.card($0) }
+            if loadNextPage {
+                cells.append(.loading)
+            }
+            snapshot.appendItems(cells)
             return snapshot
         }.bind(to: content).disposed(by: self.disposeBag)
     }
