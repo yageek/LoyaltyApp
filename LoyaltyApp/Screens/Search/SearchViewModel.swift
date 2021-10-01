@@ -40,28 +40,7 @@ final class SearchViewModel: ViewModel {
         let content = BehaviorRelay<NSDiffableDataSourceSnapshot<Int, SearchResult>>(value: NSDiffableDataSourceSnapshot())
         self.output = Output(content: content.asDriver())
 
-        // Logic
-        input.debounce(.milliseconds(500), scheduler: SerialDispatchQueueScheduler(qos: .userInteractive))
-            .flatMap { [weak self] text -> Observable<[SearchResult]> in
-                guard let self = self else { return .empty() }
-                let searchText = text ?? ""
-
-                if searchText.isEmpty {
-                    return .just([])
-                } else {
-                    return self.dependencies.apiService.searchLoyalty(byName: searchText)
-                        .map { $0.map { SearchResult(id: $0.id, cardName: $0.name) }}
-                        .catchAndReturn([])
-                        .asObservable()
-                }
-            }
-            .map { searchResults -> NSDiffableDataSourceSnapshot<Int, SearchResult>  in
-                var snapshot = NSDiffableDataSourceSnapshot<Int, SearchResult>()
-                snapshot.appendSections([0])
-                snapshot.appendItems(searchResults)
-                return snapshot
-            }.bind(to: content)
-            .disposed(by: self.disposeBag)
+        // Logic to implement
 
     }
 }
